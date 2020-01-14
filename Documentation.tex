@@ -1,0 +1,37 @@
+%%
+%% Documentation.tex
+%% Login : <hoang-trong@hoang-trong-laptop>
+%% Started on  Mon Jun 22 21:42:54 2009 Hoang-Trong Minh Tuan
+%% $Id$
+%% 
+%% Copyright (C) 2009 Hoang-Trong Minh Tuan
+
+\chapter{Document your code}
+\label{chap:document-your-code-1}
+
+
+
+This is a very important part if you want your code to be useful to
+others or later use.  Suppose that you have written your own function
+mypow
+\begin{lstlisting}
+  mypow <- function(x, power) x^power
+\end{lstlisting}
+
+Now, you can use the command {\bf prompt(func\_name)} to document your function
+
+\begin{lstlisting}
+> prompt (mypow)
+\end{lstlisting}
+You will see something like this\footnote{\url{http://www.hsph.harvard.edu/biostats/courses/individual/bio271/lectures/L6/L6.pdf}}.
+\begin{verbatim}
+created file named mypow.Rd in the current directory
+  Edit the file and move it to the appropriate directory, 
+possibly /usr4/biostatistics/src/R-1.4.1/src/library/<pkg>/man/
+\end{verbatim}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

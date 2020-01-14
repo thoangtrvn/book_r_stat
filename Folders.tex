@@ -1,0 +1,56 @@
+%%
+%% Folders.tex
+%% Login : <hoang-trong@hoang-trong-laptop>
+%% Started on  Fri Jun 12 19:40:28 2009 Hoang-Trong Minh Tuan
+%% $Id$
+%% 
+%% Copyright (C) 2009 Hoang-Trong Minh Tuan
+%% This program is free software; you can redistribute it and/or modify
+%% it under the terms of the GNU General Public License as published by
+%% the Free Software Foundation; either version 2 of the License, or
+%% (at your option) any later version.
+%% 
+%% This program is distributed in the hope that it will be useful,
+%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%% GNU General Public License for more details.
+%% 
+%% You should have received a copy of the GNU General Public License
+%% along with this program; if not, write to the Free Software
+%% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+%%
+
+\chapter{Folders}
+\label{chap:folders}
+
+
+Wherever you run the R interpreter, it is the working directory of the
+current workspace. Any access to any folder without the absolute path
+is relatively to this folder. However, we can change it.
+
+\textbullet Set the new working directory
+\begin{lstlisting}
+>> setwd(new_dir)
+\end{lstlisting}
+
+\textbullet To retrieve the full path of the working directory
+\begin{lstlisting}
+>> getwd()
+\end{lstlisting}
+
+{\bf Example}:
+\begin{lstlisting}
+setwd(paste(getwd(), "/BINF 702/Assign.02", 
+           sep = ""))  # at Lab
+setwd("F:/Textbooks/BINF 702/Data for BINF702")
+setwd("F:\\Textbooks\\BINF 702\\Data for BINF702\\")
+\end{lstlisting}
+
+Supporting function: we need some string manipulation functions,
+e.g. paste().
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

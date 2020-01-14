@@ -1,0 +1,89 @@
+%%
+%% ValidateData.tex
+%% Login : <hoang-trong@hoang-trong-laptop>
+%% Started on  Sun Jun 14 16:39:43 2009 Hoang-Trong Minh Tuan
+%% $Id$
+%% 
+%% Copyright (C) 2009 Hoang-Trong Minh Tuan
+%% This program is free software; you can redistribute it and/or modify
+%% it under the terms of the GNU General Public License as published by
+%% the Free Software Foundation; either version 2 of the License, or
+%% (at your option) any later version.
+%% 
+%% This program is distributed in the hope that it will be useful,
+%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%% GNU General Public License for more details.
+%% 
+%% You should have received a copy of the GNU General Public License
+%% along with this program; if not, write to the Free Software
+%% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+%%
+
+
+\chapter{Validate Data}
+\label{chap:validate-data}
+
+\section{NaN, NA}
+\label{sec:nan-na}
+
+\subsection{NA}
+\label{sec:na}
+
+
+Missing values in the statistical sense are values that not known, NA.
+The default type of NA is {\it logical}. So, the occurrence of NA may
+trigger a logical rather than a numerical indexing. However, it may get coerced
+to another type.
+
+\begin{lstlisting}
+if (na.rm)
+
+        x <- x[!is.na(x)]
+
+    else if (any(is.na(x)))
+        stop("Missing values and NaN's not allowed if `na.rm' is FALSE")
+    if (any((p.ok <- !is.na(probs)) & (probs < 0 | probs > 1))) 
+        stop("probs outside [0,1]")
+    if (na.p <- any(!p.ok)) {
+        o.pr <- probs
+        probs <- probs[p.ok]
+\end{lstlisting}
+
+Any numerical or logical calculation with NA generally return NA.
+
+NA is not comparable to any values, including itself. So, to test for
+the missing value of an object or entry, {\bf is.na()} function is
+used. However, in matching, a NA value will match a NA value.
+
+(since R 1.5.0) A string `NA' is different from a NA character
+type. So, to specify a NA character type, use
+\begin{lstlisting}
+as.character(NA)
+\end{lstlisting}
+
+(since R 2.5.0) To use a NA value of appropriate type, there are some
+new constants: \lstinline!NA_integer_, NA_real_, NA_complex_,!
+\lstinline!NA_character_!.
+
+
+\subsection{NaN}
+\label{sec:nan}
+
+Numerical calculation whose result is undefined, e.g. $0/0$, produce
+the value NaN. To check for an object/expression is NaN, {\bf
+  is.nan(object)} is used, {\bf is.na(NaN)} return TRUE. 
+
+Coercing NaN to integer or logical type result in a NA value. However
+coercing it to a character type result in a `NaN` string. 
+
+Any comparison with NaN value result in a NA value (logical). 
+
+A NaN value only match to another NaN value, not NA.
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

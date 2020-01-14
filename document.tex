@@ -1,0 +1,156 @@
+\documentclass[11pt]{book}
+\usepackage{amsmath} %Never write a paper without using amsmath for its many new commands
+
+\usepackage{amssymb} %Some extra symbols
+
+\usepackage{makeidx} %If you want to generate an index automatically
+%\usepackage{graphicx} %If you want to include postscript graphics
+\ifx\pdftexversion\undefined
+\usepackage[dvips]{graphicx}
+%%%%%%%% 
+%% To include .jpg and .pnm into latex
+%%%%%%%%%%%%%%
+\DeclareGraphicsExtensions{.jpg,.eps,.pnm}
+\DeclareGraphicsRule{.jpg}{eps}{.jpg.bb}{`jpeg2ps -h #1}
+\DeclareGraphicsRule{.pnm}{eps}{.pnm.bb}{`pnmtops #1}
+\else
+\usepackage{graphicx}
+\fi
+ 
+\usepackage{epsfig}
+
+\usepackage{color}  %Add color capabilities to fonts,e.g. \color{blue}{text something}
+\usepackage{listings} % Add typeset programs (programming code) within LaTeX.
+
+\usepackage{tabularx}
+%\usepackage{ucs}
+\usepackage[T1]{fontenc}
+%\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+\usepackage{chemarr}
+
+\usepackage{verbatim}
+
+\usepackage[version=3]{mhchem}
+
+%\usepackage{mystyle} %Create your own file, mystyle.sty where you put all your own \newcommand statements, for example.
+%\usepackage{url}
+\usepackage[hyphens]{url}
+           % usage \url{URL}
+
+\usepackage[hypertex, dvips]{hyperref}       % does not work with LaTeX2HTML
+            % usage \href{URL}{text}
+%\includeonly{chaptr2} %If you just want to process chaptr2.tex
+
+\usepackage{breakurl}  % used with dvips, not with pdflatex
+
+\usepackage[all]{hypcap}
+%\graphicspath{{./images/}}
+
+%\usepackage{lgrind}
+\usepackage{framed}
+%\usepackage[square]{natbib}
+\usepackage[square,sort,comma,numbers]{natbib}
+\usepackage{multicol}
+\usepackage[style=2]{mdframed}
+
+
+\begin{document}
+
+\author{Tuan, Hoang-Throng}
+\title{R statistic programming language}
+\date{Jan 2009}
+
+\frontmatter
+\tableofcontents
+%\include{preface}
+
+\mainmatter
+\lstset{language={R}, numbers=left, numberstyle=\tiny,
+  stepnumber = 5, numbersep=5pt, keywordstyle=\color{blue}}
+
+\def\ci{100\%\times (1-\alpha)}
+\def\pr{\text{Pr}}
+\def\pval{p-\text{value}}
+\def\max{{\text{max}}}
+
+\part{Statistics}
+\include{Introduction}
+\include{Variables}
+\include{BasicStatistic}
+\include{StatisticalModel}
+\include{Heteroscedasticity}
+
+\part{R language}
+\include{Folders}
+\include{Files}
+\include{DataTypes}
+\include{ControlStatements}
+\include{Functions}
+\include{Datasets}
+\include{GenerateData}
+
+\part{R for statistics}
+
+\include{Estimation}
+\include{ConfidenceInterval}
+\include{StatTest}
+\include{StatTest2samples}
+\include{StatTest_Multiplesamples}
+\include{Stattest_CatergoricalData}
+\include{Nonparametric}
+\include{ClassicGraphics}
+\include{Packages}
+\include{ValidateData}
+
+\part{R for numerical computing}
+\include{NumericalRecipe}
+\include{Parallel}
+
+\part{Interoperability}
+\include{InterLanguageComm}
+\include{Documentation}
+\include{MissingFeature}
+
+\part{Machine Learning}
+\import*{../Big_Data/}{DeepLearning.tex}
+\import*{../Big_Data/}{MachineLearning.tex}
+
+
+% \include{Data-types}
+
+% \include{ProgramConstruct}
+
+% \include{Subprograms}
+% \include{Files}
+% \include{Compile}
+
+% \include{Debug}
+
+%\part{Appendix}
+%\include{Appendix}
+
+% Convention:
+
+% \begin{itemize}
+% \item Text with \textcolor{red}{red color}: obsolete feature,
+%   statement...
+% \item Text with \textcolor{green}{yellow color}: not available in this version
+% \end{itemize}
+\backmatter 
+%\include{glossary}
+%\include{notat}
+\bibliographystyle{amsalpha} %The style you want to use for references.
+\bibliography{ref_statistic} %The files containing all
+                                %the articles and books you ever
+                                %referenced. 
+\printindex %Make an index AUTOMATICALLY
+
+\end{document} 
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

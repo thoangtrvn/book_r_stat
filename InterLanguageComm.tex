@@ -1,0 +1,43 @@
+%%
+%% InterLanguageComm.tex
+%% Login : <hoang-trong@hoang-trong-laptop>
+%% Started on  Thu Jul 16 17:34:44 2009 Hoang-Trong Minh Tuan
+%% $Id$
+%% 
+%% Copyright (C) 2009 Hoang-Trong Minh Tuan
+%%
+
+\chapter{Inter-Language Communication}
+\label{chap:inter-lang-comm}
+
+
+To make a call to compiled code that has been loaded to R, you can
+use\footnote{\url{http://hosho.ees.hokudai.ac.jp/~kubo/Rdoc/library/base/html/Foreign.html}}.
+\begin{lstlisting}
+.C(name, ..., NAOK = FALSE, DUP = TRUE, PACKAGE, ENCODING)
+.Fortran(name, ..., NAOK = FALSE, DUP = TRUE, PACKAGE, ENCODING)
+.External(name, ..., PACKAGE)
+    .Call(name, ..., PACKAGE)
+
+.External.graphics(name, ..., PACKAGE)
+    .Call.graphics(name, ..., PACKAGE)
+\end{lstlisting}
+
+\section{Load a library}
+\label{sec:load-library}
+
+Here, you will know how to load a DLL (shared library) written in
+another language (C, Fortran) into R. You use {\bf dyn.load()}
+function\footnote{\url{http://hosho.ees.hokudai.ac.jp/~kubo/Rdoc/library/base/html/dynload.html}}.
+\begin{lstlisting}
+dyn.load(x, local = TRUE, now = TRUE, ...)
+dyn.unload(x)
+
+is.loaded(symbol, PACKAGE = "", type = "")
+\end{lstlisting}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

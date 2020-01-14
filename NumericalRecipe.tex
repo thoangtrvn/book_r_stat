@@ -1,0 +1,30 @@
+%%
+%% NumericalRecipe.tex
+%% Login : <hoang-trong@hoang-trong-laptop>
+%% Started on  Thu Jul 16 17:18:19 2009 Hoang-Trong Minh Tuan
+%% $Id$
+%% 
+%% Copyright (C) 2009 Hoang-Trong Minh Tuan
+%%
+
+\chapter{Numerical recipes in R}
+\label{chap:numerical-recipes-r}
+
+\section{Solving system of ODE}
+\label{sec:solving-system-ode}
+
+You can use {\bf lsoda()}
+function\footnote{\url{http://hosho.ees.hokudai.ac.jp/~kubo/Rdoc/library/odesolve/html/lsoda.html}}.
+\begin{lstlisting}
+lsoda(y, times, func, parms, rtol, atol, tcrit=NULL, 
+  jacfunc=NULL, verbose=FALSE, dllname=NULL, hmin=0, 
+  hmax=Inf, ...)
+
+\end{lstlisting}
+
+This function, indeed, call the Fortran subroutine {\bf lsoda}, from Netlib.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

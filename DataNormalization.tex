@@ -1,0 +1,79 @@
+%%
+%% DataNormalization.tex
+%% Login : <hoang-trong@hoang-trong-laptop>
+%% Started on  Sun Sep 20 22:02:05 2009 Hoang-Trong Minh Tuan
+%% $Id$
+%% 
+%% Copyright (C) 2009 Hoang-Trong Minh Tuan
+%%
+
+\chapter{Data normalization}
+\label{chap:data-normalization}
+
+Data analysis involves three major tasks:
+\begin{enumerate}
+\item point estimation
+
+\item hypothesis testing
+
+\item confidence interval
+\end{enumerate}
+
+
+When performing data analysis and statistical comparison between
+different data sets, it is more common belonging to hypothesis
+testing. Thus, it's important that these data are normalized to the
+same of some statistical summaries (e.g. mean, variance, median,
+normal distribution...). In this chapter, we will discuss some
+techniques to normalize the data.
+
+\section{Normal distribution}
+\label{sec:normal-distribution}
+
+Many of statistical analysis techniques assume the normal distribution
+of data. So, rescaled the data so that the new data points are
+redistributed in a look-like normal distribution is strongly desired. 
+
+This task is problem-dependent. However, log transform is mainly
+used. One major reason is that the new values are smaller so that it
+can fit to the graph axes. 
+
+\subsection{Microarray}
+\label{sec:microarray}
+
+
+In microarray data, it is more common to use $\log_2$
+transformation. Log2 transformation cause the data to be more normal
+without changing the relationship between values. 
+
+
+\section{Median corrections}
+\label{sec:median-corrections}
+
+
+To make all data have the same median value, e.g. zero, it is first to
+find the median from each data set, the sweep those median out from
+the data sets. 
+
+{\bf Example}: X is an array whose columns are different data
+set. Each column has a different median.
+
+\begin{lstlisting}
+X_med = apply(X, 2, median)
+new_X = sweep(X, 2, X_med)
+\end{lstlisting}
+
+\section{Mean corrections}
+\label{sec:mean-corrections}
+
+This can be done similar to that of median corrections.
+
+\section{Variance corrections}
+\label{sec:variance-corrections}
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

@@ -1,0 +1,644 @@
+%%
+%% Functions.tex
+%% Login : <hoang-trong@hoang-trong-laptop>
+%% Started on  Fri Jun 12 19:43:07 2009 Hoang-Trong Minh Tuan
+%% $Id$
+%% 
+%% Copyright (C) 2009 Hoang-Trong Minh Tuan
+%% This program is free software; you can redistribute it and/or modify
+%% it under the terms of the GNU General Public License as published by
+%% the Free Software Foundation; either version 2 of the License, or
+%% (at your option) any later version.
+%% 
+%% This program is distributed in the hope that it will be useful,
+%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%% GNU General Public License for more details.
+%% 
+%% You should have received a copy of the GNU General Public License
+%% along with this program; if not, write to the Free Software
+%% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+%%
+
+\chapter{Functions}
+\label{chap:functions}
+
+\section{Introduction}
+\label{sec:introduction-1}
+
+\subsection{Argument matching}
+\label{sec:argument-matching-1}
+
+
+
+Formal arguments are matched to supplied arguments first by
+{\it exact matching} on tags, then by {\it partial matching} on tags,
+and finally by {\it positional matching}. E.g., for 
+\begin{lstlisting}
+f <- function(aa, bb, cc) aa+bb^cc
+\end{lstlisting}
+the \lstinline! f(2, 3, aa=1) ! returns 9. For 
+\begin{lstlisting}
+f <- function(fun,fon)  <body>
+\end{lstlisting}
+\lstinline! f(f=1, fo=2)! is illegal, whereas
+\lstinline! f(f=1, fon=2)! is OK.  
+
+The unspecified argument ``...''  absorbs any non-matched supplied
+argument and is often used to pass on arguments to other functions;
+using it in the formal argument list before the last position may
+cause matching problems.
+
+\subsection{Argument evaluation}
+\label{sec:argument-evaluation}
+
+
+R implements {\it call-by- value} and {\it lazy evaluation}, meaning
+that arguments are not evaluated until needed. Thus, using
+side-effects programming in function arguments (like in
+\lstinline!f(x <- y)!) is bad style (but:\lstinline! x[i <- 1]! is
+nice). (The expression used as an argument is only stored in a slot of
+a promise, together with a pointer to the environment the function was
+called from (in another slot). When (if) needed, the expression is
+evaluated (sensitive to any changes of the environment pointed to) and
+stored in yet another slot (avoiding a second evaluation). This is
+called forcing the promise. If a default expression is accessed, the
+pointer points to the functions.  local environment.)
+
+\section{Mathematical functions}
+\label{sec:math-funct}
+
+\subsection{Arithmetic functions}
+\label{sec:arithmetic-functions}
+
+\subsubsection{Logarithms and Exponentials}
+\label{sec:logar-expon}
+
+\begin{enumerate}
+\item log(x, base=exp(1)): compute logarithm for any base
+, default is natural logarithm.
+
+\item logb: a wrapper for log for compatibility with S.
+
+\item log10: base 10 logarithm
+
+\item log2: base 2 logarithm
+
+\end{enumerate}
+
+\begin{enumerate}
+\item exp(x): exponential
+
+\item expm1(x): 
+\end{enumerate}
+\subsection{algebraic function}
+\label{sec:algebraic-function}
+
+\textbullet Solve the algebraic equation $\mathbf{A\times x} =
+\mathbf{b}$.
+\begin{lstlisting}
+x = solve(A,b)
+\end{lstlisting}
+with $\mathbf{A}$ is a square (numeric or complex) matrix, $b$ can be
+either a vector or a matrix. Here, LAPACK is used by default. User
+have to check for the equality in the column names of $A$ and
+$b$. {\it For non-square system, use} {\bf qr.solve()} function.
+
+If $A$ or $b$ is complex, then double complex algorithm is used, yet
+it can be unavailable in some platforms.
+
+\textbullet QR decomposition
+\begin{lstlisting}
+qr.solve(A,b)
+\end{lstlisting}
+
+\textbullet 
+\begin{lstlisting}
+backsolve
+\end{lstlisting}
+
+\begin{lstlisting}
+forwardsolve
+\end{lstlisting}
+\textbullet Exponential function $e^x$
+\begin{lstlisting}
+y = exp(x)
+\end{lstlisting}
+
+\textbullet Solve a polynomial
+\begin{lstlisting}
+uniroot polyroot optimize nlm deriv 
+\end{lstlisting}
+
+\textbullet Geometrical function
+\begin{lstlisting}
+log log10 sqrt exp sin cos tan acos asin atan 
+
+cosh sinh tanh gamma lgamma choose lchoose bessel
+\end{lstlisting}
+
+\begin{lstlisting}
+abs sign sum prod diff cumsum cumprod min max pmax pmin range length
+\end{lstlisting}
+
+\begin{lstlisting}
+diag scale nrow ncol length append drop
+det eigen svd qr chol chol2inv
+\end{lstlisting}
+
+\textbullet Eigenvalues/eigenvectors
+\begin{lstlisting}
+eigen(cbind(c(1,-1),c(-1,1))) 
+\end{lstlisting}
+
+\subsection{Derivative}
+\label{sec:derivative}
+
+
+To find the derivative of a function, e.g. $f(x) = (x^n)' \rightarrow
+f'(x)= nx^{n-1}$, user either have to know the analytical solution or
+use some numerical method to find the approximate value.
+
+Analytical solution
+\begin{lstlisting}
+f.prime = function(x,n) {n * x^(n-1)}
+\end{lstlisting}
+
+If you only know the form of $f(x)$, you can use Euler method
+\begin{equation}
+  \label{eq:19}
+  \frac{df}{dx} = \frac{f(x+dx)-f(x)}{dx}
+\end{equation}
+or
+\begin{equation}
+  \label{eq:20}
+   \frac{df}{dx} = \frac{f(x+dx)-f(x-dx)}{2dx}
+\end{equation}
+\begin{lstlisting}
+f.prime = function(f, dx=0.00001) { 
+   function(x) { (f(x+delta) - f(x-delta))/(2*delta)} }
+
+f = function (x,n) {x^n}
+\end{lstlisting}
+
+Euler method is not good in practice, you can use Runga-Kutta method
+
+The question is are there any way to find the derivative of any
+function? For simple expression, you can use {\bf deriv()} function.
+\begin{verbatim}
+   deriv( formula, variables)
+\end{verbatim}
+
+\begin{lstlisting}
+> g = deriv( ~ sin( 3*x), 'x')
+> g
+expression({
+.expr1 <- 3 * x; .value <- sin(.expr1)
+.grad <- array(0, c(length(.value), 1), 
+    list(NULL, .grad[, "x"] <- cos(.expr1) * 3; attr(.value,
+    "grad.value})  
+
+> x = 7
+> eval(g)
+[1] 0.8366556
+attr(,"gradient")
+        x
+[1,] -1.643188
+\end{lstlisting}
+Here, the form of the function is represented by a formula.
+
+ 
+
+\section{Statistical functions}
+\label{sec:stat-funct}
+
+
+
+\subsection{(arithmetic) mean}
+\label{sec:arithmetic-mean}
+
+We use $\bar{x}$ to denote the sample mean and $\mu$ to denote the
+population mean.
+\begin{equation}
+  \label{eq:5}
+  \bar{x} = \frac{\sum_i^n x_i}{n}
+\end{equation}
+As sample mean is an unbiased estimator for the population mean, we
+can use the same formula to estimate the population mean
+\begin{equation}
+  \label{eq:36}
+  \mu = \bar{x} = \frac{\sum_i^n x_i}{n}
+\end{equation}
+
+\begin{verbatim}
+mean(x, trim = 0, na.rm = FALSE, ...)
+\end{verbatim}
+with $x$ is a vector of values.
+
+
+There is no discrimination between the sample arithmetic mean and the
+population arithmetic mean.
+
+
+{\bf GOOD of mean}:
+\begin{itemize}
+\item provide a good estimator for the middle of the distribution if the underlying distribution is normal 
+\end{itemize}
+
+{\bf BAD of mean}:
+\begin{itemize}
+\item sensitive to outliers
+\item nappropriate if the underlying distribution is far from being
+  Gaussian, e.g. it is too skewed
+\end{itemize}
+
+\begin{lstlisting}
+X = rnorm(10, size = 100)
+Y1 = sample(x, 100, rep = F)
+Y2 = sample(x, 100, rep = F)
+...
+Y10 = sample(x, 100, rep = F)
+Pop_mean = mean(mean(Yi))
+\end{lstlisting}
+
+
+\subsection{weighted (arithmetic) mean}
+\label{sec:weight-arithm-mean}
+
+\begin{equation}
+  \label{eq:6}
+  \bar{x} = \frac{\sum_i^n w_ix_i}{n}
+\end{equation}
+\begin{verbatim}
+weighted.mean(x, w, na.rm = FALSE)
+\end{verbatim}
+If $w$ is missing, then it turns back to {\bf mean()} function. If $x$
+contains NA values, then we can strip them off before the computation
+by setting $na.rm=TRUE$.
+
+
+\subsection{(harmonic) mean}
+\label{sec:harmonic-mean}
+
+This is the reciprocal of the arithmetic mean of the reciprocal.
+
+Package: {\it psych}
+
+\begin{equation}
+  \label{eq:7}
+  HM = \frac{1}{mean(1/x)} = \frac{n}{\sum_i^n 1/x_i}
+\end{equation}
+
+\begin{verbatim}
+harmonic.mean(x)
+\end{verbatim}
+
+\subsection{(geometric) mean}
+\label{sec:geometric-mean}
+
+Package: {\it psych}
+\begin{equation}
+  \label{eq:8}
+  GM = e ^{\frac{\sum_i^n \ln x_i}{n}}
+\end{equation}
+\begin{verbatim}
+geometric.mean(x)
+\end{verbatim}
+
+
+{\bf GOOD}:
+\begin{itemize}
+\item usefull for certain type of skewed distribution
+\item can be used on log scale
+\end{itemize}
+
+{\bf BAD}:
+\begin{itemize}
+\item not appropriate for symmetric data
+\item more sensitive to outliers than the median, but less so than the
+  mean
+\end{itemize}
+
+
+\subsection{mid-range}
+\label{sec:mid-range}
+
+\begin{verbatim}
+mid_range = (smallest + largest) / 2
+\end{verbatim}
+
+\subsection{mid-mean}
+\label{sec:mid-mean}
+
+computes the mean using the data between the 25th and 75th percentiles
+
+\subsection{trimmed-mean}
+\label{sec:trimmed-mean}
+
+The same ideas as mid-means, except the different percentiles are
+used. The common choice is to trim 5\% percentiles lower and upper tails.
+
+\begin{verbatim}
+mean(x, trim = 0, na.rm = FALSE, ...)
+\end{verbatim}
+with $trim=.05$.
+
+\subsection{winsorized mean}
+\label{sec:winsorized-mean}
+
+
+Similar to the trimmed-mean, however instead of trimming the data,
+they are all set to the lower 5th or upper 95th percentiles. For
+example, all data less then 5th percentiles are all set to the value
+of the 5th percentile and all data greater than 95th percentiles are
+all set to the value of the 95th percentile.
+
+\begin{verbatim}
+win<-function(x,tr=.2){
+#
+# Compute the gamma Winsorized mean for the data in the vector x.
+# tr is the amount of Winsorization
+#
+   y<-sort(x)
+   n<-length(x)
+   ibot<-floor(tr*n)+1
+   itop<-length(x)-ibot+1
+   xbot<-y[ibot]
+   xtop<-y[itop]
+   y<-ifelse(y<=xbot,xbot,y)
+   y<-ifelse(y>=xtop,xtop,y)
+   win<-mean(y)
+   win
+}
+\end{verbatim}
+
+\subsection{(sample) median}
+\label{sec:sample-median}
+
+\begin{verbatim}
+median(x, na.rm = FALSE)
+\end{verbatim}
+\begin{itemize}
+\item if length(x) = n is odd, then return the (n+1)/2-th value
+\item if length(x) = n is even, then return the avarage of the n-th
+  and (n+1)-th value
+\end{itemize}
+
+\subsection{(sample) variance}
+\label{sec:sample-variance}
+
+We use $s^2$ to denote sample variance and $\sigma^2$ for population
+variance. The sample variance is given
+\begin{equation}
+  \label{eq:9}
+  s^2 = \frac{\sum_{i=1}^n (x_i-\bar{x})^2}{n}
+\end{equation}
+However, the sample variance is a biased estimator for the population
+variance. So, a corrected sample variance, which is an unbiased
+estimator for the population variance need to use $(n-1)$ in the
+denominator.
+
+\begin{equation}
+  \label{eq:10}
+  \sigma^2 = \frac{\sum_{i=1}^n (x_i-\bar{x})^2}{n-1}
+\end{equation}
+
+\begin{verbatim}
+var(x, y = NULL, na.rm = FALSE, use)
+\end{verbatim}
+with x and y can be both vectors, or matrices. If they are matrices,
+then the variances between the columns are computed.
+
+% \begin{equation*}
+%   \sigma^2 = \frac{\sum_{i=1}^n (x_i-\bar{x})^2}{n-1}
+% \end{equation*}
+
+% \begin{lstlisting}
+% X = rnorm(10, size = 100)
+% Y1 = sample(x, 100, rep = F)
+% Y2 = sample(x, 100, rep = F)
+% ...
+% Y10 = sample(x, 100, rep = F)
+% Pop_mean = mean(var(Yi))
+% \end{lstlisting}
+
+\subsection{(sample) covariance}
+\label{sec:sample-covariance}
+
+\begin{verbatim}
+cov(x, y = NULL, use = "all.obs",
+    method = c("pearson", "kendall", "spearman"))
+\end{verbatim}
+with $use$ parameter gives the method for computing covariances in the
+presence of missing values (NA). This must be (an abbreviation of) one
+of the strings 'all.obs', 'complete.obs', 'pairwise.complete.obs'
+
+
+\begin{verbatim}
+cov2cor(V)
+\end{verbatim}
+which scales a covariance matrix into the corresponding correlation
+matrix efficiently.
+
+
+
+\subsection{(sample) correlation}
+\label{sec:sample-correlation}
+
+\begin{verbatim}
+cor(x, y = NULL, use = "all.obs",
+     method = c("pearson", "kendall", "spearman"))
+\end{verbatim}
+
+\subsection{(sample) standard deviation}
+\label{sec:sample-stand-devi}
+
+\begin{equation}
+  \label{eq:11}
+  std = s
+\end{equation}
+
+\begin{verbatim}
+sd(x, na.rm = FALSE)
+\end{verbatim}
+with $x$ can be either a numeric vector,  matrix of data.frame. If $x$
+is a matrix or a data.frame, then it return a set of std(s) for every column.
+
+\subsection{(sample) quantile (percentile)}
+\label{sec:sample-quant-perc}
+
+Reminding a (cumulative probability) distribution function 
+\begin{equation}
+  \label{eq:21}
+  Pr(X \le x) = p
+\end{equation}
+Then, if we divide the domain of X into equally regular intervals,
+then the points marking the boundary between any two adjacent
+intervals are called {\bf quantiles}. So, a quantile is a possible
+value of the random variable X (Sect.\ref{sec:random-variable}) and is defined
+as the inverse of the cumulative distribution function.
+
+Some technical
+terms\footnote{\url{http://en.wikipedia.org/wiki/Quantile}}:
+\begin{itemize}
+\item quartiles: the 4-quantile (0th, 25th, 50th, 75th, 100th percentiles)
+\item deciles: the 10-quantile (0th, 10th, 20th, …, 90th, 100th
+  percentiles)
+\item quintiles (0th, 20th, 40th, 60th, 80th, 100th percentiles)
+\end{itemize}
+
+{\bf NOTE}: The 0th and 100th percentiles are extension beyond
+traditional statistic definitions.
+
+
+
+If there are $(q-1)$ such intervals, then there are $q$ quantile
+points, and the $k$-th point is called the $k$-th $q$-quantile. In
+mathematical equation, we have $z$ is the $k$-th $q$-quantile if
+\begin{equation}
+  \label{eq:14}
+  Pr(X \le z) \le \frac{k}{q}, Pr(X \ge z) \ge \frac{q-k}{q}
+\end{equation}
+Ideally, for an infinite population, we should have
+\begin{equation}
+  \label{eq:15}
+   Pr(X \le z) = \frac{k}{q}, Pr(X \ge z) = \frac{q-k}{q}
+\end{equation}
+For a finite sample size $N$, there are various method for estimating
+the quantiles (nine in total) and be described in Chapter
+\ref{chap:basic-statistics}. In R language, all those methods
+implemented in a single function {\bf quantile()}.
+
+
+\begin{verbatim}
+quantile(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
+         names = TRUE, type = 7, ...)
+\end{verbatim}
+By default, it will return a vector of 5 values of sample quantiles (the 0\%
+percentile, the 25\% percentile, the 50\% percentile, the 75\%
+percentile, and the 100\% percentile); a vector has a $name$ attribute
+(by default) 
+
+As we've just mentioned, there are different algorithms for finding
+the sample quantiles, totally is 9~\cite{hyndman1996sqs}. In R
+language, the default implementation is type = 7. However, type=8 is
+recommended by Hyndman. For moderate or large sample, the difference
+in the result between type 7 and type 8 are negligible.  Types from
+1-3 are for discontinuous samples. Types from 4-9 are for continuous
+samples.
+
+\begin{lstlisting}
+> quantile(x = rnorm(n, mean = 1, sd = 10), type = 2)
+\end{lstlisting}
+
+
+
+{\bf GOOD}:
+\begin{itemize}
+\item The sample quantiles provide a nonparametric estimation of the
+  population based on some independent observations $x = (X_1, X_2, …,
+  X_n)$.
+\item always guarantees that 50\% of the data are on either side of
+  the median
+\item insensitive to outliers (better than mean) 
+\end{itemize}
+
+
+{\bf BAD}:
+\begin{itemize}
+\item not a good estimator for the middle of the distribution
+\end{itemize}
+
+
+To obtain the true quantile values of a specific distribution, we have
+to use the following functions $qnorm$ (for normal distribution),
+$qbinom$ (for binomial distribution), $qpois$ (for Poisson
+distribution).
+
+
+\subsection{range}
+\label{sec:range}
+
+\begin{lstlisting}
+range(object, na.rm = FALSE)
+\end{lstlisting}
+RETURN: the vector of two elements: the  minimum and maximum value of
+the object.
+
+\subsection{quasi-range}
+\label{sec:quasi-range}
+
+If the $r$ smallest and largest values of the sample are omitted, then
+the range of the remaining  $n-2r$ values is called the $r$-th
+quasi-range.
+
+
+\subsection{coefficient of variation}
+\label{sec:coeff-vari}
+
+\begin{equation}
+  \label{eq:16}
+  CV = \frac{s}{\bar{x}} 100%
+\end{equation}
+
+\subsection{kurtosis}
+\label{sec:kurtosis}
+
+Package: {\it e1071}
+
+
+\begin{lstlisting}
+kurtosis(x, na.rm=FALSE)
+\end{lstlisting}
+
+\subsection{skewness}
+\label{sec:skewness}
+
+Package: {\it e1071}
+
+\begin{lstlisting}
+skewness(x, na.rm=FALSE)
+\end{lstlisting}
+
+\subsection{relative risk}
+\label{sec:relative-risk}
+
+Package: {\it epitools}
+
+\begin{lstlisting}
+epitab(...) with method riskratio
+\end{lstlisting}
+
+\subsection{subtract out statistic summary}
+\label{sec:subtr-out-stat}
+
+There are situation that you want to sweep out the means,
+i.e. normalize the data so that its mean is zero. This can be done
+easily for a single dataset. However, what if you have a series of
+dataset, organized in array form.  You can do by writing a for
+loops. However, the code is not clean.
+
+Then, R provides you the function {\bf sweep()} along with the
+function {\bf apply()}. At first, we use the function apply() to find
+out the statistical summary.
+
+\begin{lstlisting}
+> column_mean  = apply(X, 2, mean)
+> normalized_X = sweep(X,2, column_mean)
+\end{lstlisting}
+
+\subsection{standard error of mean (sem)}
+\label{sec:standard-error-sem}
+
+\begin{equation}
+  \label{eq:59}
+  \text{sem} = \frac{s}{\sqrt{n}}
+\end{equation}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 
+
+

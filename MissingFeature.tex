@@ -1,0 +1,74 @@
+%%
+%% MissingFeature.tex
+%% Login : <hoang-trong@hoang-trong-laptop>
+%% Started on  Mon Jun 22 11:02:20 2009 Hoang-Trong Minh Tuan
+%% $Id$
+%% 
+%% Copyright (C) 2009 Hoang-Trong Minh Tuan
+%% This program is free software; you can redistribute it and/or modify
+%% it under the terms of the GNU General Public License as published by
+%% the Free Software Foundation; either version 2 of the License, or
+%% (at your option) any later version.
+%% 
+%% This program is distributed in the hope that it will be useful,
+%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%% GNU General Public License for more details.
+%% 
+%% You should have received a copy of the GNU General Public License
+%% along with this program; if not, write to the Free Software
+%% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+%%
+
+\chapter{Missing features}
+\label{chap:missing-features}
+
+\section{Function argument}
+\label{sec:function-argument}
+
+
+\subsection{Multivariate functions}
+\label{sec:mult-funct}
+
+Current
+\begin{lstlisting}
+f = function(v){ v[1]^2 + 2*v[1]*v[2] + sqrt(v[3])*v[1] }
+\end{lstlisting}
+Expected:
+\begin{lstlisting}
+f = function([x,y,z]){ x^2 + 2*x*y + sqrt(z)*x }
+\end{lstlisting}
+
+\section{Matrix}
+\label{sec:matrix-1}
+
+\subsection{Assembling matrices}
+\label{sec:assembling-matrices}
+
+Current
+\begin{lstlisting}
+> M = cbind( rbind(1,2,3), rbind(6,5,4) )
+----------------
+     [,1] [,2]
+[1,]   1   6
+[2,]   2   5
+[3,]   3   4
+\end{lstlisting}
+Expected: a concise operator for assembling matrix
+
+\subsection{MatLab-like consistency}
+\label{sec:matl-like-cons}
+
+Current
+\begin{lstlisting}
+> M[,1]
+[1] 1 2 3
+\end{lstlisting}
+Expected: if you extract a column, it should return a column (not a row)
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

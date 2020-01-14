@@ -1,0 +1,175 @@
+%%
+%% Files.tex
+%% Login : <hoang-trong@hoang-trong-laptop>
+%% Started on  Fri Jun 12 19:40:46 2009 Hoang-Trong Minh Tuan
+%% $Id$
+%% 
+%% Copyright (C) 2009 Hoang-Trong Minh Tuan
+%% This program is free software; you can redistribute it and/or modify
+%% it under the terms of the GNU General Public License as published by
+%% the Free Software Foundation; either version 2 of the License, or
+%% (at your option) any later version.
+%% 
+%% This program is distributed in the hope that it will be useful,
+%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%% GNU General Public License for more details.
+%% 
+%% You should have received a copy of the GNU General Public License
+%% along with this program; if not, write to the Free Software
+%% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+%%
+
+\chapter{Files}
+\label{chap:files}
+
+Reading data into a statistical analysis system and export the result
+to some other system are essential tasks.  In general, a data set is
+organized in column-wise. As a matter of fact, data file should also
+be organized in a format such that elements can be detected easily and
+organized into columns.
+
+If the file is a text file, each row is a record. In a single line,
+there is a delimiter (tab, whitespace...)  to separate elements in a
+row. Tab-separated and whitespace-separated text file is an important
+part of working with R. To read/write to these text files, R provides
+2 functions: {\bf read.table()} and {\bf write.table()}.
+
+R is not really good in manipulating large-scale data. Thus, it is
+recommended to use the facilities provided by other languages,
+e.g. Java, Perl or Python, and then make use of the packages written
+in these languages from R. Some of them includes: SJava, RSPerl,
+RSPython packages from \href{http://www.omegahat.org}{OmegaHat}
+project; and rJava from CRAN.
+
+% R is not well suit for large-scale data. Thus, there are several
+% packages (SJava, RSPerl, RSPython - from Omegahat project, and rJava -
+% from CRAN) that allows user to integrate Python, Perl, Java... codes
+% into R.
+
+Normally, the files are {\it tab-separated} or {\it
+  whitespace-separated} text files.  
+
+\section{Excel file}
+
+For writing to Excel file, it's best to use \verb!openxlsx! as it is not Java-depdendent.
+
+For reading Excel file, it is best to use  \verb!readxl! package
+
+\subsection{openxlsx}
+
+ Through the use of 'Rcpp', read/write times are comparable to the 'xlsx' and
+ 'XLConnect' packages with the added benefit of removing the dependency on Java.
+ 
+\url{https://cran.r-project.org/web/packages/openxlsx/}
+
+
+\subsection{readxl package}
+\label{sec:readxl-package}
+
+Readxl and Rcpp are needed to load an .xls or .xlxs file.
+
+\begin{verbatim}
+> install.package(readxl)
+# or
+install.packages("tidyverse")
+
+> library(readxl)
+> readxl_example()
+ [1] "clippy.xls"    "clippy.xlsx"   "datasets.xls"  "datasets.xlsx"
+ [5] "deaths.xls"    "deaths.xlsx"   "geometry.xls"  "geometry.xlsx"
+ [9] "type-me.xls"   "type-me.xlsx" 
+\end{verbatim}
+
+
+\section{Import}
+\label{sec:import}
+
+\subsection{into a vector or list}
+\label{sec:into-vector-or}
+
+You can read data from a file into a vector or a list using
+{\bf scan()} command. The default is {\it whitespace-separated}
+file. You can tell a different delimiter using {\it sep}
+parameter. You can also skip a number of lines before starting to read
+data by using {\it skip} parameter. You can also tell the maximum
+number of lines of data to be read using {\it nlines} parameter.
+
+\begin{lstlisting}
+ scan(file = "", what = double(0), nmax = -1, n = -1, sep = "",
+          quote = if(identical(sep, "\n")) "" else "'\"", dec = ".",
+          skip = 0, nlines = 0, na.strings = "NA",
+          flush = FALSE, fill = FALSE, strip.white = FALSE,
+          quiet = FALSE, blank.lines.skip = TRUE, multi.line = TRUE,
+          comment.char = "", allowEscapes = FALSE,
+          encoding = "unknown")
+\end{lstlisting}
+{\it what} tells the type of data to be read (which can be either
+'logical', 'integer', 'numeric', 'complex', 'character', 'raw' and
+'list').
+
+{\bf IMPORTANT}: If {\it what} is a 'list', then each line is a record
+which contains length, fields and the list components which must be of
+either 6 types listed.
+
+{\it nmax} is the maximum number of values to read. By default, it
+reads all. 
+
+{\bf IMPORTANT}: If {\it what} is a 'list', then {\it nmax} tells the
+number of lines (records) to read. 
+
+\subsection{into a data.frame}
+\label{sec:into-data.frame}
+
+The data from the file is organized in table format, i.e. it can have
+a header row, and row names. Thus, we have to use {\bf read.table()}
+command. 
+
+\begin{lstlisting}
+read.table(file, header = FALSE, sep = "", 
+           quote = "\"'", dec = ".", 
+           row.names, col.names,
+           as.is = !stringsAsFactors,
+           na.strings = "NA", colClasses = NA, 
+           nrows = -1, skip = 0, check.names = TRUE, 
+           fill = !blank.lines.skip,
+           strip.white = FALSE, 
+           blank.lines.skip = TRUE,
+           comment.char = "#",
+           allowEscapes = FALSE, flush = FALSE,
+           stringsAsFactors = default.stringsAsFactors(),
+           encoding = "unknown")
+\end{lstlisting}
+By default: there is no header row (header=FALSE), the file is {\it
+  whitespace-separated}. If there is a column read as character
+string, we need to specify the quoting character using {\it quote}
+parameter. 
+
+As the data is in table format, it can have row names which can be
+specified through a vector (using {\it row.names} assigned to a
+vector), a number which tells the columns in the file that contains
+row names (using {\it row.names} assigned to a column number), a
+character string which is the name of a table column whose elements
+are row names (using {\it row.names} assigned to a character string,
+and {\it header}=TRUE). If {\it header}=TRUE, and the number of fields
+in the first row is less than the number of columns in the data, then
+the first column in the data is designated for row names. Otherwise,
+row names are automatically numbered with 1, 2, 3.... 
+
+
+\section{Export to a text file}
+\label{sec:export-text-file}
+
+The primary function is {\bf cat()}. 
+
+
+\section{Export to a binary file}
+\label{sec:export-binary-file}
+
+
+\url{http://cran.r-project.org/doc/manuals/R-data.html}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

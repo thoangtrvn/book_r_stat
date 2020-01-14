@@ -1,0 +1,86 @@
+
+\chapter{Confidence Interval (CI)}
+\label{chap:conf-interv-ci}
+
+
+% \section{Normal distribution}
+% \label{sec:normal-distribution}
+
+For a given sample of size $n$, we can estimate the
+$100\%\times(1-\alpha)$ confidence interval (CI) of that
+sample. Normally, we want to find the CI of the true unknown mean of
+the population from which the sample is drawn. 
+
+Clearly, the CI varies from sample to sample. The length of the CI can
+give some ideas of the precision of the point estimated,
+e.g. $\bar{x}$. The smaller the length of the CI, the better the
+sample mean is used to estimate the population mean. 
+
+In addition to finding the CI for the mean - which we need to use
+z-test or t-test, we also want to find the CI for the variance - then
+we need to use Chi-square distribution.
+
+We may have (Sect.~\ref{sec:binom-distr})
+\begin{enumerate}
+\item Two-sided confidence interval
+\item One-sided confidence interval
+\end{enumerate}
+
+The {\bf one-sided CI} for the binomial parameter $p$ using
+normal-theory approach 
+\begin{itemize}
+\item upper one-sided $\ci$ CI is of the form $p> p_1$ with
+  \begin{equation}
+    \label{eq:55}
+    \pr(p > p_1) = 1-\alpha
+  \end{equation}
+  If $n\hat{p}\hat{q} \ge 5$, then $\hat{p}\sim \text{Norm}(p,pq/n)$ and 
+  \begin{equation}
+    \label{eq:56}
+    p > \hat{p} - z_{1-\alpha} \sqrt{\hat{p}\hat{q}/n}
+  \end{equation}
+\item lower one-sided $\ci$ CI is
+  \begin{equation}
+    \label{eq:57}
+    \pr(p<p_2) = 1-\alpha
+  \end{equation}
+  and
+  \begin{equation}
+    \label{eq:58}
+    p < \hat{p} + z_{1-\alpha} \sqrt{\hat{p}\hat{q}/n}
+  \end{equation}
+\end{itemize}
+
+\begin{framed}
+  We use $z_{1-\alpha/2}$ for two-sided CI, but for one-sided CI, we
+  need to use $z_{1-\alpha}$. 
+\end{framed}
+Use the similar methods for the one-sided CI for the mean and variance
+of a normal distribution, for the binomial parameter $p$, and for the
+Poisson expectation $\mu$ using exact methods.
+
+
+Go to Chap.~\ref{chap:generate-data}.
+
+\section{Bayesian CI}
+\label{sec:bayesian-ci}
+
+\begin{equation}
+  \label{eq:67}
+  \pr(\mu_1 < \mu < \mu_2) = 1-\alpha
+\end{equation}
+where
+\begin{equation}
+  \label{eq:68}
+  \begin{split}
+    \mu_1 = \bar{x} - z_{1-\alpha/2}\frac{\sigma}{\sqrt{n}} \\
+    \mu_2 =  \bar{x} + z_{1-\alpha/2}\frac{\sigma}{\sqrt{n}} \\
+  \end{split}
+\end{equation}
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

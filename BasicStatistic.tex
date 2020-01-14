@@ -1,0 +1,272 @@
+%%
+%% BasicStatistic.tex
+%% Login : <hoang-trong@hoang-trong-laptop>
+%% Started on  Sun Jun 14 16:25:59 2009 Hoang-Trong Minh Tuan
+%% $Id$
+%% 
+%% Copyright (C) 2009 Hoang-Trong Minh Tuan
+%% This program is free software; you can redistribute it and/or modify
+%% it under the terms of the GNU General Public License as published by
+%% the Free Software Foundation; either version 2 of the License, or
+%% (at your option) any later version.
+%% 
+%% This program is distributed in the hope that it will be useful,
+%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%% GNU General Public License for more details.
+%% 
+%% You should have received a copy of the GNU General Public License
+%% along with this program; if not, write to the Free Software
+%% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+%%
+
+\chapter{Basic statistics}
+\label{chap:basic-statistics}
+
+\section{PDF (probability density function, probability distribution function)}
+\label{sec:PDF}
+
+This function provides the information about the probability (the area underling the curve, bounded by the range) 
+of a random variable falling within a range (in X-axis).
+So, the total area under the curve is 1.0 always. 
+
+IMPORTANT: a probability density function can take on values greater than one, i.e. its peak can be greater than 1.
+
+The PDF has some statistics:
+\begin{enumerate}
+  \item {\bf mode}: the value on X-axis at which the peaf of PDF
+  
+  \item {\bf mean}: just half of the two values on X-axis: mean and max values at which PDF are zeros.
+  
+  
+  \item {\bf median}: the value on X-axis at which the underlying area on left side and right side is equal, i.e. 0.50
+  
+\end{enumerate}
+
+\section{Order statistics}
+\label{sec:order-statistics}
+
+
+Suppose we have a sample of size $n$: $x_1,x_2,...,x_n$ from a given
+distribution. Elements in this sample are sorted in increasing order to get
+$x_{(1)} \le x_{(2)} \le ... \le x_{(n)}$. This sorted data is called the {\bf
+order statistic} of the original sample.  The $k$-th order statistic of a sample
+is equal to its $k$th-smallest value or the $k$-th element in the order
+statistic. This is, along with rank statistic (Sect.\ref{sec:rank-statistics}),
+the most fundamental tool in non-parametric statistics and inference.
+
+There are some interesting properties of this order
+statistics. Suppose that the original sample is obtained from the
+normal distribution ($\mu,\sigma^2$), then each $x_i$ is normally distributed with
+$(\mu,\sigma^2)$. However, elements in the order statistics all have
+different distributions. This is due to the fact that the $i$-th element
+is always not larger than the $i+1$-the element. Then, the expected
+value (mean or average) of the $i$-th element must be less than or
+equal that of the $(i+1)$-th element. 
+
+
+
+\section{Quantile}
+\label{sec:quantile}
+
+The quantile concept is discussed in section
+\ref{sec:sample-quant-perc}. The question is ``what is the unbiased
+estimator for quantile, i.e. the $k$-th order statistic?''.
+
+The elements in the sample are considered as empirical quantiles. To
+determine the quantile corresponding to a probability level $p =
+\frac{k}{q}$, the method that is largely used is to combine 2 nearest
+empirical quantiles. Normally, $k$ is an integer and $q=100$. The
+$k$-th q-quantile is computed as follows:
+\begin{itemize}
+\item $N\times \frac{k}{q}$ ($=Nk/100$) is decomposed into 2 parts:
+  $j$ is the integer part, $g$ is the fractional part.
+\item Type = 1:
+  \begin{enumerate}
+    \item If $g=0$ then the value $x_{(j)}$ is the quantile
+    \item If $g>0$ then the value $x_{(j+1)}$ is the quantile
+  \end{enumerate}
+\item Type = 2:
+  \begin{enumerate}
+  \item If $g=0$, then the average of  $x_{(j)}, x_{(j+1)}$ is the
+    quantile
+  \item If $g>0$, then the value $x_{(j+1)}$ is the quantile
+  \end{enumerate}
+\item Type = 5:
+  \begin{itemize}
+    \item $\lambda = 1/2$ (see below)
+    \item is considered the best
+    \item popular among hydrologists
+  \end{itemize}
+
+\item Type = 6 
+  \begin{itemize}
+    \item (used by MiniTab and SPSS)  
+    \item distribution-free,  but not unbiased
+
+  \end{itemize}
+\item Type = 7
+  \begin{itemize}
+  \item distribution-free, but not unbiased
+  \end{itemize}
+\item Type = 9 
+  \begin{itemize}
+  \item is unbiased for the normal distribution, but not for
+  other distributions
+  \end{itemize}
+\end{itemize}
+
+
+
+Let $\mu_{k,n}$ denote the expected value of the $k-$th order
+statistic of a sample of size $n$ from a standard normal
+distribution. Others name for $\mu_{k,n}$ is
+{\it rankits, normal scores}, or {\it expected normal scores}. Then, a
+good approximation for the rankits is
+\begin{equation}
+  \label{eq:13}
+  \mu_{k,n} = \Phi^{-1} (\frac{k-\lambda}{n+1-2k})
+\end{equation}
+
+with $\Phi(x)=Pr(X\le x)=p$ is the normal cumulative probability, and
+$\Phi^{-1}(p) = x$. In R, we use \lstinline!x = qnorm(p)!. 
+
+The quantity $p_k = \frac{k-\lambda}{n+1-2k}$ is the intuitively
+plausible and simple {\it probability level}. The most popular choice
+for $\lambda$ is 0, 3/8 and 1/2. R language use 3/8 for small sample
+size and 1/2 for large sample size. Then we have
+\begin{equation}
+  \label{eq:22}
+  p_k = \frac{k}{n+1}, p_k = \frac{k-3/8}{n+1/4}, p_k = \frac{k-1/2}{n}
+\end{equation}
+
+
+
+Clearly, given a sample, the normal scores $\mu_{k,n}$ can be
+computed. The {\bf normal probability plot} (rankit plot, or QQ-plot)
+is the plot of the pairs $(\mu_{k,n},x_{k})$ with the normal score on
+the horizontal line. If the original data comes from the normal
+distribution, then the normal probability plot should be approximately
+linear (slope $\sigma$ and intercept $\mu$). This is the essential
+means to check an assumed normal distribution (and can be applied to
+any distribution).
+
+
+Now, the question is can we estimate $\sigma$ and $\mu$? These are
+indeed the two parameter of the regression line. This can be done in R
+as follows
+\begin{lstlisting}
+  ! a sample
+>> x <- 5+2*rnorm(20)
+  ! draw QQ-plot
+>> qqnorm(x) # does a normal prob plot
+
+>> k <- rank(x) # get ranks of x
+  ! lambda = 3/8
+>> q <- qnorm((k-.375)/(20+.25))
+
+>> plot(q,x) # same as qqnorm(x)
+>> lm(x ~ q) # regression coefs estimate parms
+Coefficients:
+         (Intercept)      q
+           5.201        1.898
+\end{lstlisting}
+This is called {\it parametric regression on order statistic} or
+parametric ROS method.
+
+
+Reference: Chernoff and Lieberman for normal (1954) and generalized
+(1956) probability. Hazen (1914) suggest $\lambda=1/2$. Blom (1958,
+p.143) suggest $\lambda=3/8$. For plotting position in extreme-value
+distribution, read Kimball (1960). For extensive set of references,
+read Harter (1984), and Harter \& Wiegand (1985) for Monte-Carlo
+study. Gamma distribution studied by Wilk et al. (1962). Reviews in
+Barnett (1975), Lockhart and Stephens (1998)
+
+
+
+
+
+\section{Rank statistics}
+\label{sec:rank-statistics}
+
+
+\section{Biased/Unbiased Estimators}
+\label{sec:bias-estim}
+
+An {\bf estimator} is a rule for calculating the estimate of a given
+quantity based on observation data. If the estimate is a scalar, then
+we call it {\bf point estimator}. Otherwise, we call it
+{\bf interval estimator}. If the quantity to estimate is denoted as
+$\theta$, then the estimator is denoted as $\hat\theta$ (add a hat to it).
+
+
+So, the  estimator (i.e. the rule) for the mean of a sample is a point
+estimator and the rule $\hat\theta$ is
+\begin{equation}
+  \label{eq:23}
+  \theta = \frac{\sum x_i} {n}
+\end{equation}
+As we may obtain different sample, the estimate is considered as a
+r.v. X, and thus the estimator is denoted as $\hat\theta(X)$, i.e. a
+function of the r.v. NOTE: A function of a r.v. is a r.v. as well. 
+
+
+The {\bf bias} of the estimator is defined as
+\begin{equation}
+  \label{eq:24}
+  \text{Bias}[\hat\theta] = E[\hat\theta]-\theta = E[\hat\theta-\theta]
+\end{equation}\
+The mean of the sample is an unbiased estimator of the population
+mean. The reason is that 
+\begin{itemize}
+\item if we increase the sample size, the sample
+  mean will reach the population mean. 
+
+\item if we increase the number of samples, under the law of Central
+  Limit Theorem, the mean of the sample means also reach the
+  population 
+\end{itemize}
+
+How about the estimator of the sample variance? 
+\begin{equation}
+  \label{eq:25}
+  \begin{split}
+    E[\frac{1}{n}(X-\mu+\mu-\bar{X})^2]=
+    E[\frac{1}{n}(X-\mu)^2+\frac{1}{n}(\mu-\bar{X})^2+2\frac{1}{n}(\mu-\bar{X})(X-\mu)]
+    \\
+    =
+    E[\frac{1}{n}(X-\mu)^2]+E[\frac{1}{n}(\mu-\bar{X})^2]+2\frac{1}{n}(\mu-\bar{X})E[(X-\mu)] 
+\\
+=E[\frac{1}{n}(X-\mu)^2]+\frac{1}{n}(\mu-\bar{X})^2-2\frac{1}{n}[\mu-\bar{X}]^2
+\\
+= E[\frac{1}{n}(X-\mu)^2] - \frac{1}{n}(\mu-\bar{X})^2 \\
+= \sigma^2 - a^2 < \sigma^2
+  \end{split}
+\end{equation}
+So, the (incorrected) sample variance is biased. So, in practice, to
+make the sample variance more closed to the population variance, we
+use a smaller denominator, i.e. divided by (n-1), rather than n. 
+
+\section{Effect size}
+\label{sec:effect-size}
+
+Effect size is a simple way of quantifying the difference between two groups
+that has many advantages over the use of tests of statistical significance
+alone. Effect size emphasises the size of the difference rather than confounding
+this with sample size
+
+
+Effect size is a standard measure that can be calculated from any number of
+statistical outputs. One type of effect size, the standardized mean effect,
+expresses the mean difference between two groups in standard deviation units.
+You'll see this reported as Cohen's d, or simply referred to as 'd.'
+
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

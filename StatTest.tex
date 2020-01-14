@@ -1,0 +1,636 @@
+
+\chapter{Statistic Tests (One-sample)}
+\label{chap:statistic-tests}
+
+By default, the common assumption is that the underlying distribution of the
+population is normal. For non-normal distribution, read
+Chap.\ref{chap:statistics-tests-non}.
+
+\section{Hypothesis testing}
+\label{sec:hypothesis-testing}
+
+The {\bf null hypothesis}, denoted $H_\circ$, is the hypothesis to be
+tested. Typically, $H_\circ$ is  
+\begin{verbatim}
+H0: there is NO difference between A and B
+\end{verbatim}
+The {\bf alternate hypothesis}, denoted $H_1$, is the hypothesis, in
+some way, contradicts to the null hypothesis (and doesn't necessary
+contradict to $H_\circ$).
+
+As we're doing a test, there is always an uncertain. So
+\begin{itemize}
+\item The prob. $\alpha$ of rejecting $H_\circ$ while $H_\circ$ is
+  true is the prob. of {\bf type I error}
+\item The prob. $\beta$ of accepting $H_\circ$ while $H_\circ$ is
+  false is the prob. of {\bf type II error}
+\end{itemize}
+Type I error, i.e. $H_\circ$ is wrongly rejected, is considered more
+serious and we aim to minimize it. It never be zero, but keep at a
+small value $\alpha$. 
+\begin{equation}
+  \label{eq:60}
+  \pr(\text{Type I error }) = \text{significance level } = \alpha
+\end{equation}
+
+\begin{framed}
+  If no explicit mention about the distribution, normal distribution
+  is assumed. 
+\end{framed}
+
+When we compute a test statistic (e.g. $t$ or $z$ ...) and determine
+the outcome of a test by comparing the test statistics to a critical
+value determined by the type I error $\alpha$, it is called
+{\bf critical-value method}.
+\begin{itemize}
+\item $\alpha \le p$-value: we accept the null hypothesis
+\item $\alpha > p$-value: we reject the null hypothesis
+\end{itemize}
+
+% \begin{verbatim}
+%  -----------------|-----------------------
+%    accept       alpha    reject
+% \end{verbatim}
+
+So, the question is \textcolor{red}{What level of $\alpha$ to use?} -
+The answer is dependent upon the relative importance of type I and
+type II errors. The smaller the $\alpha$, the bigger the $\beta$. In
+general, $\alpha=0.05$ is widely used. 
+
+
+\subsection{Hypothesis testing vs. CI}
+\label{sec:hypoth-test-vs}
+
+For two-sided case, $H_\circ: \mu=\mu_0$ is rejected with a two-sided
+level $\alpha$ test iff the two-sided $\ci$ CI for $\mu$ doesn't
+contain $\mu_0$.
+
+\section{p-value}
+\label{sec:p-value}
+
+The {\bf p-value} is the $\alpha$ level at which we would be
+indifferent between accepting or rejecting $H_\circ$. That is, $\pval$
+is the border line at which we cannot tell $H_\circ$ is rejected or
+accepted. 
+\begin{itemize}
+\item $p$-value $< \alpha$ : reject $H_\circ$
+\item $p$-value $\ge \alpha$: accept $H_\circ$
+\end{itemize}
+
+An example is
+\begin{equation}
+  \label{eq:97}
+  \pval = \pr(t_{n_1} < t)
+\end{equation}
+It is the left area of $t$ under a $t_{n-1}$ distribution..
+
+{\bf p-value} is a widely use quantity to determined the statistical
+significant of the value obtained
+\begin{enumerate}
+\item If $.01 \le p < .05$: the result is significant, i.e. the mean
+  of the sample is different from that of the general population.
+\item If $.001 \le p < .01$: the result is highly significant
+\item If $ p < .001$: the result is very highly significant
+\item If $ p > .05$: the result is NOT statistically significant
+\item If $ 0.05 \le p < .10$: there may be a trend toward statistical
+  significance 
+\end{enumerate}
+$p$-value doesn't tell us how large the difference. It's the $\ci$ CI
+that tell us how far the mean of the general population from the mean
+of the sample. 
+
+
+\section{Power of a test}
+\label{sec:power-test}
+
+{\bf Power of a test} is used to determine whether the sample size
+(e.g. from pilot study) is good enough for a liable test. It tells how
+likely the significant difference will be found given $H_1$ is
+true. If we want to know the required sample size, we read
+Sect.~\ref{sec:sample-size-determ}.
+
+
+
+{\bf Example}: A pilot study is conducted with $n=10$ patients, the
+obtained mean is 5 mm Hg, and the variance is 100 mm Hg. Usually we
+want the power of the test at least 80\%, the question is ``is the
+sample size sufficient for the study?''.  
+
+If $H1: \mu =\mu_1 < \mu_0$, we use
+\begin{equation}
+  \label{eq:69}
+  \text{Power} = \Phi[z_\alpha + \frac{(\mu_0-\mu_1)}{\sigma}\sqrt{n}]
+\end{equation}
+with $\Phi(x)$ = pnorm(x) in case of normal distribution.  with
+$\mu_0$ is the mean from $H_0$, and $\mu_1$ is the alternate mean.
+
+If $H_1: \mu = \mu_1 > \mu_0$, we have
+\begin{equation}
+  \label{eq:70}
+  \text{Power} = 1 - \Phi[z_{1-\alpha} + \frac{(\mu_0-\mu_1)}{\sigma}\sqrt{n}]
+\end{equation}
+
+\section{Sample-size determination}
+\label{sec:sample-size-determ}
+
+Power size tells you whether the size of the collected sample is good
+enough. However, there is a way that can help you estimate a good
+sample size before you really start collecting the data.  This is
+often used in planning a study.
+
+A choice for sample size depends upon the type of test being used
+(i.e. one-sided or two-sided)
+\begin{enumerate}
+\item We need the sample to conduct a one-sided test 
+  \begin{equation*}
+    \begin{split}
+      H_0: \mu = \mu_0;\;\; \text{normal distribution }, \sigma \text{ is known}\\
+      H_1: \mu < \mu_0  \text{ or } \mu > \mu_0
+    \end{split}
+  \end{equation*}
+  with significance level $\alpha$ and probability of detecting a
+  significant difference is $(1-\beta)$, then the minimum sample size
+  is
+  \begin{equation}
+    \label{eq:73}
+    n = \frac{\sigma^2(z_{1-\beta}+z_{1-\alpha})^2}{(\mu_0-\mu_1)^2}
+  \end{equation}
+\item We need the sample to conduct a two-sided test 
+  \begin{equation*}
+    \begin{split}
+      H_0: \mu = \mu_0;\;\; \text{normal distribution }, \sigma \text{ is known}\\
+      H_1: \mu \ne \mu_0     
+    \end{split}
+  \end{equation*}
+  with significance level $\alpha$ and probability of detecting a
+  significant difference is $(1-\beta)$, then the minimum sample size
+  is
+  \begin{equation}
+    \label{eq:74}
+    n = \frac{\sigma^2(z_{1-\beta}+z_{1-\alpha/2})^2}{(\mu_0-\mu_1)^2}
+  \end{equation}
+
+\item We need the sample size to estimate the mean of a normal
+  distribution with known variance $\sigma^2$, so that the two-sided
+  $\ci$ CI for the mean $\mu$ be no wider than L.
+  \begin{equation}
+    \label{eq:74}
+    n = 4 z^2_{1-\alpha/2} s^2/L^2
+  \end{equation}
+\end{enumerate}
+
+
+% \section{Normal distribution assumption}
+% \label{sec:norm-distr-assumpt}
+
+
+\section{z-test (normal, known variance)}
+\label{sec:z-test}
+
+The z-test in standardized testing - the analog of the Student's t-test for a
+population with underlying distributiion is normal and the variance is known, or
+the sample size is large ($n>200$) (NOTE: some says $n>30$ is enough) so that
+the population variance can be assumed as the sample variance. As it is very
+unusual to know the entire population, the t-test is much more widely used
+(Sect.\ref{sec:t-test}). 
+
+The {\bf z-score} (or z-statistics) is just a way to standardized the
+score in case of using in {\bf z-test}
+\begin{equation}
+  \label{eq:43}
+  z = \frac{X-\mu}{s/\sqrt{n}}
+\end{equation}
+(if $n>200$) or
+\begin{equation}
+  \label{eq:44}
+  z = \frac{X-\mu}{\sigma/\sqrt{n}}
+\end{equation}
+
+The $100\%\times (1-\alpha)$ CI of a given sample of size $n$ is
+\begin{equation}
+  \label{eq:45}
+  (\bar{x}-z_{1-\alpha/2} s/\sqrt{n},  \bar{x}+z_{1-\alpha/2} s/\sqrt{n})
+\end{equation}
+This interval varies from sample to sample
+
+
+\subsection{z-test for the mean}
+\label{sec:z-test-mean}
+
+
+For {\bf one-sided} test
+\begin{equation*}
+  \begin{split}
+    H_0: \mu = \mu_0;\;\; \sigma \text{ is known}\\
+    H_1: \mu < \mu_0 
+  \end{split}
+\end{equation*}
+\begin{enumerate}
+\item If $z<z_{\alpha}$: reject H0
+\item If $z \ge z_{\alpha}$: accept H0
+\end{enumerate}
+with \textcolor{red}{$z_x = $ qnorm(x)}. The $p$-value is
+\begin{equation}
+  \label{eq:66}
+  p = \pr(z)
+\end{equation}
+\begin{equation*}
+  \begin{split}
+    H_0: \mu = \mu_0;\;\; \sigma \text{ is known}\\
+    H_1: \mu > \mu_0
+  \end{split}
+\end{equation*}
+\begin{enumerate}
+\item If $z>z_{1-\alpha}$: reject H0
+\item If $z \le z_{1-\alpha}$: accept H0
+\end{enumerate}
+with $z_x = $ qnorm(x). The $p$-value is
+\begin{equation}
+  \label{eq:66}
+  p = 1-\pr(z)
+\end{equation}
+
+
+For {\bf two-sided} test, 
+\begin{enumerate}
+\item If $z<z_{\alpha/2}$ or $z>z_{1-\alpha/2}$: reject H0
+\item If $z_{\alpha/2} \le z \le z_{1-\alpha/2}$: accept H0
+\end{enumerate}
+with $z_x = $ qnorm(x).  The $p$-value is
+\begin{equation}
+  \label{eq:65}
+  \pval = \left\{
+    \begin{array}{cc}
+      2\Phi(z) & \text{if } z \le 0 \\
+      2[1-\Phi(z)] & \text{if } z > 0 \\
+    \end{array}
+  \right.  
+\end{equation}
+with \textcolor{red}{ $\Phi(z)=$ pnorm(z)}.
+
+\subsection{Power }
+\label{sec:power-}
+
+For one-sample z-test one-side alternative:
+\begin{equation*}
+  \begin{split}
+    H_0: \mu = \mu_0;\;\; \sigma \text{ is known}\\
+    H_1: \mu = \mu_1 
+  \end{split}
+\end{equation*}
+then
+\begin{equation}
+  \label{eq:71}
+  \begin{split}
+    \text{Power} &= \Phi[z_\alpha + \frac{|\mu_0-\mu_1|}{\sigma}\sqrt{n}]
+    \\
+    &= \Phi[-z_{1-\alpha} + \frac{|\mu_0-\mu_1|}{\sigma}\sqrt{n}]
+  \end{split}
+\end{equation}
+
+For one-sample z-test two-side alternative
+\begin{equation*}
+  \begin{split}
+    H_0: \mu = \mu_0;\;\; \sigma \text{ is known}\\
+    H_1: \mu \ne \mu_1 
+  \end{split}
+\end{equation*}
+then the exact power is
+\begin{equation}
+  \label{eq:63}
+  \begin{split}
+    \Phi\left[-z_{1-\alpha/2}+\frac{(\mu_0-\mu_1)\sqrt{n}}{\sigma}\right]+
+    \Phi\left[-z_{1-\alpha/2}+\frac{(\mu_1-\mu_0)\sqrt{n}}{\sigma}\right]
+  \end{split}
+\end{equation}
+and the approximated value is
+\begin{equation}
+  \label{eq:72}
+  \text{Power} = \Phi[-z_{1-\alpha/2} + \frac{|\mu_0-\mu_1|}{\sigma}\sqrt{n}]
+\end{equation}
+
+
+\section{t-test (normal, unknown variance)}
+\label{sec:t-test}
+
+As population variance $\sigma^2$ is rarely known, {\bf t-test} is
+more widely used than z-test, with the sample variance $s^2$ is used
+instead.
+\begin{equation}
+  \label{eq:75}
+  t = \frac{\bar{x} - \mu_0}{s/\sqrt{n}}
+\end{equation}
+T-test use t-statistics which follows t-distribution with $(n-1)$
+df. So, 95\% of the t statistics (or $\alpha=0.05$) in repeated
+samples of size $n$ should fall between 2.5-th and 97.5-th percentiles
+of the $t_{n-1}$ distribution.
+
+\begin{equation}
+  \label{eq:39}
+\pr(t_{n-1,\alpha/2} < t < t_{n-1,1-\alpha/2}) = 1- \alpha
+\end{equation}
+with
+\textcolor{red}{the value of $t_{d,u}$ can be looked up from Table 5
+  (Fundamental of BioStatistics Book)}.
+
+If we substitute $t=\frac{\bar{X}-\mu}{s/\sqrt{n}}$ into
+eq.~\eqref{eq:39}, then we have
+% \begin{equation}
+%   \label{eq:42}
+%   \pr\left( t_{n-1,1-\alpha/2} < t < 
+%     t_{n-1,1-\alpha/2} \right) = 1-\alpha
+% \end{equation}
+
+\begin{equation}
+  \label{eq:41}
+  \pr\left(\bar{X} - t_{n-1,1-\alpha/2} \frac{s}{\sqrt{n}} < \mu < \bar{X} +
+    t_{n-1,1-\alpha/2} \frac{s}{\sqrt{n}}\right) = 1-\alpha
+\end{equation}
+as from the symmetry of the distribution $t_{d,u}=-t_{d,1-u}$; and the
+$100\%\times (1-\alpha)$ confidence interval for $\mu$ is
+\begin{equation}
+  \label{eq:40}
+  \left(\bar{x} - t_{n-1,1-\alpha/2} \frac{s}{\sqrt{n}},  \bar{x} +
+    t_{n-1,1-\alpha/2} \frac{s}{\sqrt{n}}\right) 
+\end{equation}
+with $\bar{x}$ is the sample mean.  However, for large sample size ($n
+> 200$), we can use z-test when the t statistic is replaced by
+z-statistics.
+
+{\bf Example}: Given a sample of size $n=10$, the mean is
+$\bar{x}=116.5$, and the sample standard variance is $s=21.29$. Find
+the 95\% CI for the mean?
+\begin{itemize}
+\item We don't know the mean, but we want to find the range in which
+  we're 95\% confidence that the mean has to hall within this range. 
+\item As we don't know the population variance, we need to use $t$
+  distribution, or using t-statistics 
+\end{itemize}
+Suppose the sample size is $n=300$, or is $\sigma$ is know, we can use
+z-statistics (Sect.\ref{sec:z-test}). 
+
+\subsection{t-test for the mean}
+\label{sec:one-sample-t}
+
+The population mean is $\mu$, the observed mean of the sample is $\mu_0$.
+One-sample t-test determines whether the given sample is representative of that
+population with specified mean. In other words, the question is whether the
+sample mean is significant different from the population. The {\bf one-sided}
+alternative hypothesis is ``no difference'' or
+\begin{equation*}
+  \begin{split}
+    H_0: \mu = \mu_0;\;\; \sigma \text{ is unknown}\\
+    H_1: \mu > \mu_0 \text{ or } \mu < \mu_0
+  \end{split}
+\end{equation*}
+
+If the assumption distribution is normal, we can use $t$-test, with
+$t$ statistics is
+\begin{equation*}
+  t= \frac{\bar{x} - \mu_0} {s/\sqrt{n}}
+\end{equation*}
+So, we find $t_{n-1,\alpha}$ from Table 5 (Fundamental of
+BioStatistics Book). 
+
+If
+\begin{equation*}
+  \begin{split}
+    H_0: \mu = \mu_0;\;\; \sigma \text{ is unknown}\\
+    H_1: \mu < \mu_0 
+  \end{split}
+\end{equation*}
+\begin{enumerate}
+\item If $t<t_{n-1,\alpha}$: reject H0
+\item If $t \ge t_{n-1,\alpha}$: accept H0
+\end{enumerate}
+and the $p$-value
+\begin{equation}
+  \label{eq:61}
+  \pval = \pr(t_{n-1} \le t)
+\end{equation}
+
+If 
+\begin{equation*}
+  \begin{split}
+    H_0: \mu = \mu_0;\;\; \sigma \text{ is unknown}\\
+    H_1: \mu > \mu_0 
+  \end{split}
+\end{equation*}
+\begin{enumerate}
+\item If $t>t_{n-1,1-\alpha}$: reject H0
+\item If $t \le t_{n-1,\alpha}$: accept H0
+\end{enumerate}
+and the $p$-value is
+\begin{equation}
+  \label{eq:62}
+  \pval = \pr(t_{n-1} > t)
+\end{equation}
+
+
+
+For {\bf two-tailed test}, the alternate hypothesis $H1$ is $\mu$
+doesn't fall into the range of interest. 
+\begin{equation*}
+  \begin{split}
+    H_0: \mu = \mu_0;\;\; \sigma \text{ is unknown}\\
+    H_1: \mu \ne \mu_0
+  \end{split}
+\end{equation*}
+\begin{enumerate}
+\item If $|t|<t_{n-1,1-\alpha/2}$: reject H0
+\item If $|t| \ge t_{n-1,\alpha/2}$: accept H0
+\end{enumerate}
+We can also use $p$-value
+\begin{equation}
+  \label{eq:64}
+  \pval = \left\{
+      \begin{array}{cc}
+        2\pr(t_{n-1}\le t) & \text{if } t \le 0 \\
+        2[1-\pr(t_{n-1}\le t)] & \text{if } t > 0 \\
+      \end{array}
+      \right.
+\end{equation}
+with \textcolor{red}{ $\pr(t \le x) =$ pt(x)}.
+
+\subsection{R function}
+\label{sec:r-function}
+
+We use \verb!t.test(x,...)! as in Sect.~\ref{sec:paired-t-test}, with
+\verb!y=NULL!. 
+
+\section[Chi-square test]{$\chi^2$-test (test variance)}
+\label{sec:chi2-test}
+
+The z-test and t-test apply for mean, if we want to test for the
+variance, we use $\chi^2$-test with the test statistics
+\begin{equation}
+  \label{eq:77}
+  X^2 = \frac{(n-1)s^2}{\sigma_0^2}
+\end{equation}
+\begin{equation*}
+  H_\circ: \sigma^2 = \sigma_0^2
+\end{equation*}
+
+{\bf two-sided} test
+\begin{enumerate}
+\item If $X^2 < \chi^2_{n-1, \alpha/2}$ or $X^2 > \chi^2_{n-1,
+    1-\alpha/2}$: $H_0$ is rejected
+\item If $ \chi^2_{n-1, \alpha/2} < X^2 < \chi^2_{n-1, 1-\alpha/2}$:
+  $H_0$ is accepted
+\end{enumerate}
+with
+\textcolor{red}{ $\chi^2_{d,u}$ can be looked up from Table 6
+  (Fundamental of BioStatistics Book)}.  The $p$-value is
+\begin{enumerate}
+\item If $s^2 \le \sigma^2_0$: $p$-value = $2\times$ (area to the left
+  of $X^2$ under a $\chi^2_{n-1}$ curve)
+
+NOTE: Area to the left is given by $pchisq(X^2,n-1)$
+
+\item If $s^2 > \sigma^2_0$: $p$-value = $2\times$ (area to the right
+  of $X^2$ under a $\chi^2_{n-1}$ curve)
+
+  NOTE: Area to the left is given by $1-pchisq(X^2,n-1)$
+
+\end{enumerate}
+
+{\bf one-sided} test, use $\alpha$ instead of $\alpha/2$. 
+
+
+\section{Binomial distribution}
+\label{sec:binom-distr-1}
+
+\begin{framed}
+  If in the study, the probability of a ``success'' event vary from
+  object to object in a study, i.e. $p_i$ for object $i$-th (e.g. due
+  to long study time, or different geographical region), we need to
+  use $\mu=\sum p_i$ and use Poisson distribution
+  (Sect.~\ref{sec:poisson-distribution-1}). 
+\end{framed}
+
+First, check if $n\hat{p}\hat{q} \ge 5$ or not? If YES, try to use
+normal-theory, i.e. using normal approximation to the binomial
+distribution with new test statistics
+\begin{equation}
+  \label{eq:76}
+  z = \frac{\hat{p}-p_0}{\sqrt{\frac{p_0q_0}{n}}}
+\end{equation}
+{\bf Two-sided} test
+\begin{enumerate}
+\item If $z < z_{\alpha/2}$ or $z > z_{1-\alpha/2}$: $H_\circ$ is
+  rejected
+\item If $z_{\alpha/2} \le z \le z_{1-\alpha/2}$: $H_\circ$ is accepted
+\end{enumerate}
+The $p$-value is
+\begin{enumerate}
+\item If $\hat{p} \le p_0$: $p$-value = $2\times$ (area to the left
+  of $z$ under a $\text{Norm}(0,1)$ curve)
+
+  NOTE: Area to the left is given by $pnorm(z)$
+
+\item If $\hat{p} > p_0$: $p$-value = $2\times$ (area to the right
+  of $z$ under a $\text{Norm}(0,1)$ curve)
+\end{enumerate}
+
+\begin{framed}
+  NOTE: Substitute $\alpha$ by $\alpha/2$ for one-sided test. 
+\end{framed}
+The $\ci$ CI for $p$ is
+\begin{equation}
+  \label{eq:96}
+  \hat{p} \pm z_{1-\alpha/2} \sqrt{\hat{p}\hat{q}/n}
+\end{equation}
+
+\begin{framed}
+  If $\alpha = 0.05 = 5\%$, then $z_{1-\alpha/2}=qnorm(...) = 1.96$
+\end{framed}
+
+If NO, then we can continue with the exact method for Binomial
+distribution.
+The $p$-value is
+\begin{enumerate}
+\item If $\hat{p} \le p_0$: 
+  \begin{equation*}
+   \pval= \min\left[ 2\sum^x_{k=0}\left(
+      \begin{array}{c}
+        n \\k
+      \end{array}
+    \right) p_0^k (1-p_0)^{n-k},1 \right]
+  \end{equation*}
+
+
+\item If $\hat{p} > p_0$:
+  \begin{equation*}
+    \pval= \min\left[ 2\sum^n_{k=x}\left(
+        \begin{array}{c}
+          n \\k
+        \end{array}
+      \right) p_0^k (1-p_0)^{n-k},1 \right]
+  \end{equation*}
+\end{enumerate}
+
+\subsection{Power}
+\label{sec:power}
+
+Power tell us how likely a significant difference is found.
+
+{\bf Two-sided} $H_\circ: p = p_0$, then the power is
+\begin{equation}
+  \label{eq:78}
+  \Phi\left[ \sqrt{\frac{p_0q_0}{p_1q_1}}\left( z_{\alpha/2}+\frac{|p_0-p_1|\sqrt{n}}{\sqrt{p_0q_0}}\right)\right]
+\end{equation}
+
+\subsection{Sample-size determination}
+\label{sec:sample-size-determ-1}
+
+{\bf Two-sided} $H_\circ: p=p_0; H_1: p = p_1 \ne p_0$: sample size
+require to perform the test with significant level $\alpha$ and power
+$(1-\beta)$ is
+\begin{equation}
+  \label{eq:79}
+  n = \frac{p_0q_0(z_{1-\alpha/2}+z_{1-\beta}\sqrt{\frac{p_1q_1}{p_0q_0}})^2}{(p_1-p_0)^2}
+\end{equation}
+
+NOTE: For one-sided test rather than two-sided test, we substitute
+$\alpha/2$ by $\alpha$. 
+
+\section{Poisson distribution}
+\label{sec:poisson-distribution-1}
+
+Given X as the number of ``success'' events. However, the probability
+of ``success'' for a single event vary from subject to subject. So, we
+use a new test statistics
+\begin{equation}
+  \label{eq:98}
+  \mu_0 = \sum p_i
+\end{equation}
+And the {\bf critical-value method} is used
+\begin{itemize}
+\item $c_1 \le \mu_0 \le c_2$: accept $H_\circ$
+\item ... : reject $H_\circ$
+\end{itemize}
+with the two-sided $\ci$ CI for $\mu$ based on observed value $x$ of X
+is
+\begin{equation}
+  \label{eq:99}
+  (c_1,c_2) = \bar{x} \pm t_{n-1,1-\alpha/2} \times s/\sqrt{n}
+\end{equation}
+
+
+
+Another approach is the {\bf p-value method}
+\begin{eqnarray*}
+  H_\circ:\mu=\mu_0 \\
+ H_1:\mu\ne \mu_0
+\end{eqnarray*}
+\begin{itemize}
+\item reject $H_\circ$ if $x$ is either much larger than or much
+  smaller than $\mu_0$, with $x$ is the observed number of deaths in
+  the study population. 
+\end{itemize}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

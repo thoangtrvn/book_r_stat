@@ -1,0 +1,168 @@
+%%
+%% Parallel.tex
+%% Login : <hoang-trong@hoang-trong-laptop>
+%% Started on  Mon Jun 22 21:51:55 2009 Hoang-Trong Minh Tuan
+%% $Id$
+%% 
+%% Copyright (C) 2009 Hoang-Trong Minh Tuan
+%% This program is free software; you can redistribute it and/or modify
+%% it under the terms of the GNU General Public License as published by
+%% the Free Software Foundation; either version 2 of the License, or
+%% (at your option) any later version.
+%% 
+%% This program is distributed in the hope that it will be useful,
+%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%% GNU General Public License for more details.
+%% 
+%% You should have received a copy of the GNU General Public License
+%% along with this program; if not, write to the Free Software
+%% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+%%
+
+\chapter{Parallel R simulation}
+\label{chap:parall-r-simul}
+
+
+\url{https://csgillespie.github.io/efficientR/performance.html}
+
+\begin{verbatim}
+library("microbenchmark")
+library("ggplot2movies")
+library("profvis")
+library("Rcpp")
+
+
+library("profvis")
+profvis({
+  data(movies, package = "ggplot2movies") # Load data
+  movies = movies[movies$Comedy == 1,]
+  plot(movies$year, movies$rating)
+  model = loess(rating ~ year, data = movies) # loess regression line
+  j = order(movies$year)
+  lines(movies$year[j], model$fitted[j]) # Add line to the plot
+})
+\end{verbatim}
+
+\section{In Windows}
+\label{sec:windows}
+
+\begin{lstlisting}
+cl <- makeCluster(2,type="SOCK")
+\end{lstlisting}
+
+
+\section{In Linux}
+\label{sec:linux}
+
+purpose-made packages for R : Snow, Rmpi, snowfall,...
+
+\section{serial versions}
+
+
+When you have a list of repetitive tasks, if each task is completely independent
+of the others, then it is a prime candidate for executing those tasks in
+parallel, each on its own core.
+
+\url{https://nceas.github.io/oss-lessons/parallel-computing-in-r/parallel-computing-in-r.html}
+
+Example: iris data with 5 columns
+\begin{verbatim}
+> iris
+    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+
+1
+2
+.
+.
+.
+150
+\end{verbatim}
+
+Example:
+\begin{verbatim}
+# return row indices in that the fifth-column
+which(iris[,5] != "setosa")
+
+# ... then extract 1st and 5th columns on those rows
+x <- iris[which(iris[,5] != "setosa"), c(1,5)]
+
+\end{verbatim}
+
+
+Example: multiple tasks in serial
+\begin{verbatim}
+
+trials <- 10000
+
+res <- data.frame()
+
+
+system.time({
+  trial <- 1
+  while(trial <= trials) {
+    ind <- sample(100, 100, replace=TRUE)
+    result1 <- glm(x[ind,2]~x[ind,1], family=binomial(logit))
+    r <- coefficients(result1)
+    res <- rbind(res, r)
+    trial <- trial + 1
+  }
+})
+\end{verbatim}
+
+\section{lapply() versions - faster than loop}
+
+In R, using \verb!apply()! is often significantly faster than the equivalent
+code in a loop. To do that, we need to convert our task to a function, and then
+use the \verb!*apply()! family of R functions to apply that function to all of
+the members of a set.
+\begin{verbatim}
+
+trials <- seq(1, 10000)  #MUST BE A SEQUENCE NOW
+
+system.time({
+
+  results <- lapply(trials, boot_fx)
+})
+
+\end{verbatim}
+
+\section{mcapply() versions - faster than loop}
+
+Use the multiple cores on a local computer through mclapply,
+which is analogous to lapply, but distributes the tasks to multiple processors.
+
+
+The parallel library can be used to send tasks (encoded as function calls) to
+each of the processing cores on your machine in parallel.
+
+mclapply gathers up the responses from each of these function calls, and returns
+a list of responses that is the same length as the list or vector of input data
+(one return per input item).
+
+
+
+\section{makeCluster, clusterApply}
+
+Use multiple processors on local (and remote) machines using makeCluster and clusterApply
+
+\begin{verbatim}
+In this approach, one has to manually copy data and code to each cluster member using clusterExport
+
+This is extra work, but sometimes gaining access to a large cluster is worth it
+
+\end{verbatim}
+
+
+
+\section{foreach library}
+
+
+\section{doParallel library}
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

@@ -1,0 +1,676 @@
+
+\chapter{Statistic tests (Two-sample inference)}
+\label{chap:statistic-tests-two}
+
+Again, this chapter assumes the Normal distribution, if not
+mentioned, for the population. For testing methods that requires no assumption
+about the underlying distribution, we read
+chap.~\ref{chap:statistics-tests-non}.
+
+\begin{framed}
+  In R, we need to use library STATS
+\begin{lstlisting}
+library(stats)
+\end{lstlisting}
+\end{framed}
+
+Two sample inference is used to test the relationship between two
+different populations. There are two types of studies
+\begin{itemize}
+\item {\bf Longitudinal study} (\textcolor{red}{follow-up study}):
+  take a random (single) sample, measure the data, then follow that a
+  long-term study on that sample, and measure again. See if the two
+  set of collected data are similar?  -
+  {\bf sample size always the same}
+
+\item {\bf Cross-sectional study}: take two random samples, measure
+  the data from the two samples at the same time. See if the two set
+  of collected data are similar? - {\bf sample size can be different}
+\end{itemize}
+
+\begin{framed}
+  In practice, a follow-up study is more expensive than a
+  cross-sectional study.
+\end{framed}
+
+% When the sample sizes the same, and each data point of the first
+% sample match an is related to a unique data point of the second
+% sample, we have {\bf paired test}.
+
+{\bf Paired samples} can be two set of measurements
+\begin{itemize}
+\item from the same objects: e.g. measure before and after given treatment. So
+the sample sizes are always the same.
+
+\item from different people who are chosen on an individual basis
+  using matched criteria, e.g. same age, same sex... Test whether the two
+  samples represent the same population or not. The sample sizes can be equal or
+  different.
+\end{itemize}
+
+{\bf Unpaired samples} when data points in one sample are unrelated to
+the data point in the second sample.
+
+\section{Paired-sample t-test}
+\label{sec:paired-t-test}
+
+In a {\bf paired-sample study}, e.g. there are two data set measured
+form two different trial of the same objects, e.g. one is placebo
+study and one is controlled study.  Two data of the same size $n$.  We
+arrange the data in two columns, and take the difference $d_i=x_i-y_i$
+with $(x_i,y_i)$ are matched pairs. We find the mean $\bar{d}$, and
+standard deviation $s_d$ from this new data set, given as
+\begin{equation}
+  \label{eq:81}
+  \begin{split}
+    \bar{d} &= \frac{\sum d_i}{n} \\
+    s_d &= \sqrt{\frac{\sum_{i=1}^nd_i^2 - \left( \sum_{i=1}^n d_i\right)^2/n}{(n-1)}}
+  \end{split}
+\end{equation}
+Then a new statistics is created
+\begin{equation}
+  \label{eq:80}
+  t = \frac{\bar{d}}{s_d/\sqrt{n}}
+\end{equation}
+
+If we want to test the effect of the new drug, for example, we need to
+see if there is a significant difference in the collected result from
+placebo study (new drug) and controlled study (no new drug). The null
+hypothesis is $H_\circ: \mu_1 = \mu_2$  no difference.
+\begin{enumerate}
+\item If $t > t_{n-1, 1-\alpha/2}$ or $t < -t_{n-1, 1-\alpha/2}$:
+  reject $H_\circ$
+
+\item If $t_{n-1, 1-\alpha/2} \ge t \ge -t_{n-1, 1-\alpha/2}$: accept
+  $H_\circ$
+
+\end{enumerate}
+and the $p$-value is
+\begin{enumerate}
+\item If $ t< 0$: $\pval =2\times $ (area to the left of $t$ under
+  $t_{n-1}$ distribution)
+\item If $ t \ge 0$: $\pval =2\times $ (area to the right of $t$ under
+  $t_{n-1}$ distribution)
+\end{enumerate}
+
+\begin{framed}
+  In R, we use \verb!t.test(...)! with default is ``two.sided''
+\begin{lstlisting}
+t.test(x, y=NULL, 
+   alternate=c("two.sided", "less", "greater"), 
+   mu = 0, paired=FALSE, var.equal = FALSE, 
+   conf.level = 0.95, ...)
+\end{lstlisting}
+NOTE: 
+\begin{itemize}
+\item \verb!mu=0! means $d=0$ or H0 is "there is no difference". 
+\item We need to use \verb!paired=TRUE! for paired t-test
+\end{itemize}
+
+\end{framed}
+
+The two-sided $\ci$ CI for the paired t-test
+\begin{equation}
+  \label{eq:82}
+  \left(\bar{d} - t_{n-1,1-\alpha/2} \times s_d/\sqrt{n}, \bar{d} +
+    t_{n-1,1-\alpha/2} \times s_d/\sqrt{n} \right)
+\end{equation}
+
+\begin{lstlisting}
+x = c ( 5, 5, 6, 2)
+y = c ( 2, 23, 23, 13)
+
+t.test(x, y, var.equal=FALSE, paired=TRUE)
+\end{lstlisting}
+
+\section[Unpaired t-test]{Unpaired t-test (two-sample t-test: independent
+samples, with equal variances)}
+\label{sec:unpaired-t-test}
+
+
+Two-sample t-tests test two independent samples, and see if they both represent
+the same population or not
+
+\begin{lstlisting}
+x = c ( 5, 5, 6, 2)
+y = c ( 2, 23, 23, 13)
+
+t.test(x, y, var.equal=TRUE, paired=FALSE)
+\end{lstlisting}
+
+Two distributions under the assumption of the same variances,
+$\sigma_1=\sigma_2$ (Sect.~\ref{sec:F-test_variance} will discuss the
+validation of this assumption). Compute the test statistics
+\begin{equation}
+  \label{eq:83}
+  t = \frac{\bar{x_1}-\bar{x_2}}{s\sqrt{1/n_1+1/n_2}}
+\end{equation}
+where
+\begin{equation}
+  \label{eq:84}
+  s = \sqrt{\frac{(n_1-1)s_1^2+(n_2-1)s_2^2}{n_1+n_2-2}}
+\end{equation}
+Null hypothesis $H_\circ: \mu_1 = \mu_2$, $H_1: \mu_1 \ne \mu_2$
+\begin{itemize}
+\item If $t > t_{n_1+n_2-2, 1-\alpha/2}$ or $t < -t_{n_1+n_2-2, 1-\alpha/2}$:
+  reject $H_\circ$
+
+\item If $t_{n_1+n_2-2, 1-\alpha/2} \ge t \ge -t_{n_1+n_2-2, 1-\alpha/2}$: accept
+  $H_\circ$
+\end{itemize}
+The $t_{d,u}$ can be looked up from Table 5 Appendix (Fundamental of
+Biostatistics). 
+
+and the $p$-value is
+\begin{enumerate}
+\item If $ t\le 0$: $\pval =2\times $ (area to the left of $t$ under
+  $t_{n_1+n_2-2}$ distribution)
+\item If $ t > 0$: $\pval =2\times $ (area to the right of $t$ under
+  $t_{n_1+n_2-2}$ distribution)
+\end{enumerate}
+The $\ci$ CI underlying the mean difference $(\mu_1-\mu_2)$ between
+two groups with two-sided test is
+\begin{equation}
+  \label{eq:85}
+  \left(\bar{x_1} - \bar{x_2} - t_{n_1+n_2-2, 1-\alpha/2} \times s
+    \times \sqrt{\frac{1}{n_1}+\frac{1}{n_2}}, \bar{x_1} - \bar{x_2} +
+    t_{n_1+n_2-2, 1-\alpha/2} \times s 
+    \times \sqrt{\frac{1}{n_1}+\frac{1}{n_2}} \right)
+\end{equation}
+
+\section{Test for variance equality}
+\label{sec:F-test_variance}
+
+This test is adversely affected by the non-normality of the data, and thus
+should not be used unless you know the population follows normal distribution. 
+It tests whether the two samples have the same variances or not. If you don't
+get a significant difference between the two variances, you CANNOT say they are 
+the equal, just that they are not different. This belongs to ANOVA (Analysis of
+Variance). Answers can be: (1) equal variance, homogeneity of variance,
+homoschedasticity, or (2) heterogeneity of variance, heteroschedasticity. 
+
+NOTE: All the tests in this sections are extremely sensitive to non-normality.
+
+ANOVA:
+\begin{itemize}
+  \item data points must be independent from each other
+  \item distribution MUST be normal
+  \item all individuals must be randomly selected from the population with equal
+  chance of being selected
+  \item sample sizes should be as equal as possible, but some differences are
+  allowed
+\end{itemize}
+ANOVA can only tell a difference between groups, not which group(s) are
+different. For the latter one, we use multiple comparison tests
+(Chap.\ref{chap:multiple_comparison_tests})
+ 
+\subsection{Fmax (Harlet's test)}
+
+Each group is assumed to be from a population with normal distribution (meet
+ANOVA requirement), and all groups have the same number of members (i.e. sample
+sizes are the same). The test involves calculating the ratio of the largest
+group variance to the smallest group variance. The resulting value $F_\max$ is
+then compared with a critical value from a look-up table, i.e. the sampling
+distribution of $F_\max$.
+If the computed value is less than or equal the threshold value, then the groups
+are assumed to have similar variances. 
+
+Better methods that are robust to the violations of normality are: O'Brien's
+procedure and Brown-Forsythe test.
+
+\subsection{Bartlett-Box: More than two variances are being compared}
+\label{sec:Bartlett-Box_test}
+
+Excell doesn't support Bartlett-Box, but it can be found in SPSS, Minitab, and
+UNISTAT. The hypothesis is
+\begin{eqnarray*}
+  H0: \text{There is no difference between two or more variances}\\
+  H1: \text{There are differences between two or more variances}\\
+\end{eqnarray*}
+
+The output of the test. We just focus on Bartlett-box F-test significance which
+is 0.0053 (if it is less than 0.05 then reject H0 and accept H1)
+\begin{verbatim}
+                                test-stat      significance
+classified by C1
+Bartlett's chi-square test       12.6771          0.0054
+Bartlett-Box F-test              4.2323           0.0053
+Cochran's C (max var/sum var)    2.2441           0.0212
+Hartley's F (max var/min var)    4.3212
+\end{verbatim}
+
+\subsection{F-test}
+
+\begin{eqnarray*}
+  H0: \sigma_1^2 = \sigma_2^2 \\
+  H1: \sigma_1^2 \ne \sigma_2^2 \\
+\end{eqnarray*}
+where the two samples are assumed independent random samples from an
+$\text{Norm}(\mu_1, \sigma_1^2)$, $\text{Norm}(\mu_2, \sigma_2^2)$.
+
+The best test is to consider $\sigma_1^2/\sigma_2^2$, rather than the
+$\sigma_1^2-\sigma_2^2$. However, as we don't know the real value, we
+will use the sample variance ratio, i.e. $s_1^2/s_2^2$. 
+
+\begin{eqnarray*}
+  H0: \sigma_1^2 /\sigma_2^2 = 1 \\
+  H1: \sigma_1^2 / \sigma_2^2 \ne 1\\
+\end{eqnarray*}
+
+In Sect.~\ref{sec:f-distribution}, we learned that this ratio follow
+the so-called F-distribution. So, a new test statistics is defined
+\begin{equation}
+  \label{eq:86}
+  F = s_1^2/s_2^2
+\end{equation}
+\begin{enumerate}
+\item If $F< F_{n_1-1, n_2-1, \alpha/2}$ or $F >
+  F_{n_1-1, n_2-1, 1-\alpha/2}$: reject $H_\circ$ (we need to use
+  method in Sect.~\ref{sec:unpaired-t-test-1})
+\item If $F_{n_1-1, n_2-1, \alpha/2} \le F \le
+  F_{n_1-1, n_2-1, 1-\alpha/2}$: accept $H_\circ$
+\end{enumerate}
+and the $p$-value is
+\begin{itemize}
+\item If $F \ge 1$: $\pval = 2\times \pr(F_{n_1-1,n_2-1} > F)$
+\item If $F < 1$: $\pval = 2\times \pr(F_{n_1-1,n_2-1} < F)$
+\end{itemize}
+
+\begin{lstlisting}
+var.test(x, y, ratio = 1,
+              alternative = c("two.sided", "less", "greater"),
+              conf.level = 0.95, ...)
+\end{lstlisting}
+with \verb!ratio=1! is the hypothesized ratio in $H0$. 
+
+\section[Satterthwaite's Method]{Unpaired t-test (independent samples,
+  unequal variances)}
+\label{sec:unpaired-t-test-1}
+
+\begin{lstlisting}
+x = c ( 5, 5, 6, 2)
+y = c ( 2, 23, 23, 13)
+
+t.test(x, y, var.equal=FALSE, paired=FALSE)
+\end{lstlisting}
+
+In case the test for equality of variance is failed
+(Sect.~\ref{sec:F-test_variance}), we can not use
+Sect.~\ref{sec:unpaired-t-test}. So, to compare two independent random
+samples from two normal distributions with unequal variance, we use
+{\bf Satterthwaite's method} with the test statistics
+\begin{equation}
+  \label{eq:88}
+  t = \frac{\bar{x_1} - \bar{x_2}} {\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}}}
+\end{equation}
+This is known as {\bf Behrens-Fisher problem}. Next, we compute the
+approximate degree of freedom
+\begin{equation}
+  \label{eq:89}
+  d' = \frac{\left( s_1^2/n_1 + s_2^2/n_2\right)^2}{\frac{(s_1^2/n_1)^2}{n_1-1}+\frac{(s_2^2/n_2)^2}{n_2-1}}
+\end{equation}
+Then round $d'$ to the nearest integer $d''$, and use it for
+validating the null hypothesis
+\begin{itemize}
+\item If $ t < -t_{d'', 1-\alpha/2}$ or $t > t_{d'', 1-\alpha/2}$:
+  reject H0
+\item If $  -t_{d'', 1-\alpha/2} \le t \le t_{d'', 1-\alpha/2}$:
+  accept H0
+\end{itemize}
+with $t_{d,u}$ is looked up from Table 5. 
+
+The $p$-value is
+\begin{itemize}
+\item If $ t \le 0$: $\pval = 2\times$ (area to the left of $t$ under
+  $t_{d''}$ distributions
+\item If $ t > 0$: $\pval = 2\times$ (area to the right of $t$ under
+  $t_{d''}$ distributions
+\end{itemize}
+
+The two-sided $\ci$ CI for $(\mu_1-\mu_2)$ with $\sigma_1^2$ not equal
+$\sigma_2^2$ is 
+\begin{equation}
+  \label{eq:90}
+  \left(\bar{x_1}-\bar{x_2} -
+    t_{d'',1-\alpha/2}\sqrt{s_1^2/n_1+s_2^2/n_2}, \bar{x_1}-\bar{x_2} +
+    t_{d'',1-\alpha/2}\sqrt{s_1^2/n_1+s_2^2/n_2} \right)
+\end{equation}
+
+\section{Sample-size determination}
+\label{sec:sample-size-determ-2}
+
+\subsection{Two independent samples}
+\label{sec:two-indep-sampl}
+
+
+\subsubsection{Equal size}
+\label{sec:equal-size}
+
+
+The minimum sample size for using two-sided test with significance
+level $\alpha$ and power $(1-\beta)$ in comparing two means is
+\begin{equation}
+  \label{eq:91}
+  n = \frac{(\sigma_1^2+\sigma_2^2)(z_{1-\alpha/2}+z_{1-\beta})^2}{|\mu_2-\mu_1|^2}
+\end{equation}
+NOTE: For one-sided test rather than two-sided test, we substitute
+$\alpha/2$ by $\alpha$. 
+
+\subsubsection{Unequal size}
+\label{sec:unequal-size}
+
+Set $k=n2/n1$, then minimum sample size in each sample for two-sided
+test is
+\begin{eqnarray}
+  \label{eq:92}
+  n_1 =
+  \frac{(\sigma_1^2+\sigma_2^2/k)(z_{1-\alpha/2}+z_{1-\beta})^2}{|\mu_2-\mu_1|^2}
+  \\
+  n_2 = \frac{(k\sigma_1^2+\sigma_2^2)(z_{1-\alpha/2}+z_{1-\beta})^2}{|\mu_2-\mu_1|^2}
+\end{eqnarray}
+
+NOTE: For one-sided test rather than two-sided test, we substitute
+$\alpha/2$ by $\alpha$. 
+
+\subsection{Correlated samples (longitudinal study)}
+\label{sec:corr-sampl-long}
+
+Given the correlation between the two groups (base-line and
+follows-up) is $\rho$.
+\begin{equation}
+  \label{eq:94}
+  n = \frac{2\sigma_d^2(z_{1-\alpha/2} + z_{1-\beta})^2}{\delta^2}
+\end{equation}
+where
+\begin{itemize}
+\item $\sigma_d^2 = \sigma_1^2 + \sigma_2^2 - 2\rho \sigma_1\sigma_2$
+\item $\delta$ is the difference in mean change between the two groups
+\end{itemize}
+
+\section{Power for comparing two means}
+\label{sec:power-comparing-two}
+
+\subsection{Two independent samples}
+\label{sec:two-indep-sampl-1}
+
+
+For a two-sided test
+\begin{equation}
+  \label{eq:93}
+  \text{Power} = \Phi \left( -z_{1-\alpha/2} +
+    \frac{\Delta}{\sqrt{\sigma_1^2/n_1+\sigma_2^2/n_2}} 
+\right)
+\end{equation}
+with $\Delta = |\mu_1-\mu_2|$.
+
+
+NOTE: For one-sided test rather than two-sided test, we substitute
+$\alpha/2$ by $\alpha$. 
+
+\subsection{Correlated samples}
+\label{sec:correlated-samples}
+
+
+\section[Proportional test]{Binomial proportions (large sample-size)}
+\label{sec:binomial-proportions}
+
+
+\begin{lstlisting}
+x = c (x1, x2)
+n = c (n1, n2)
+
+prop.test(x, n, p=NULL, 
+    alternative = c("two.sided", "less", "greater"),
+    conf.level = 0.95, correct = TRUE)
+\end{lstlisting}
+with \verb!correct=TRUE! means Yates's continuity correction is
+applied. If we specify $x,n$ then we don't need to use $p$ as it can
+be derived from $x,n$. Mostly, we only use
+\begin{lstlisting}
+prop.test(x,n)
+\end{lstlisting}
+If we want to use $x$ as a matrix of 2-by-2, read
+Sect.~\ref{sec:contingency-table}. 
+
+
+Suppose the two samples (of size $n_1, n_2$), the number of
+``success'' events in each sample is $x_1, x_2$, respectively. The
+prob. of ``success'' event in each sample is $p_1,p_2$ respectively.
+
+\begin{eqnarray*}
+  H0: p_1 = p_2 \\
+  H1: p_1 \ne p_2 \\
+\end{eqnarray*}
+The null hypothesis is that the proportions (or the prob. of success)
+in several groups are the same. 
+
+When $n_1\hat{p}\hat{q}\ge 5$ and $n_2\hat{p}\hat{q}\ge 5$, we use the
+exact-method
+
+\begin{equation}
+  \label{eq:95}
+  z = \frac{|p_1-p_2|-(\frac{1}{2n_1}+\frac{1}{2n_2})}{\sqrt{\hat{p}\hat{q}(1/n_1+1/n_2)}}
+\end{equation}
+with
+\begin{eqnarray*}
+  \hat{p} = \frac{n_1\hat{p_1}+n_2\hat{p_2}}{n_1+n_2}=\frac{x_1+x_2}{n_1+n_2}
+\end{eqnarray*}
+
+
+\section{Contingency table}
+\label{sec:contingency-table}
+
+Suppose you have a matrix 2-by-2, that tells the counts of success and
+failure in each group.
+\begin{verbatim}
+          "success"   "failure"  TOTAL
+ 
+group 1      ?           ?       rowsum
+ 
+group 2      ?           ?       rowsum
+
+TOTAL     colsum       colsum
+\end{verbatim}
+This is known as the {\bf contingency-table}. 
+
+
+\begin{eqnarray*}
+  H0: p_1 = p_2 \\
+  H1: p_1 \ne p_2 \\
+\end{eqnarray*}
+The null hypothesis is that the proportions (or the prob. of success)
+in several groups are the same. Under $H_\circ$, it follows a
+$\chi_1^2$ distribution. 
+
+....
+
+In R, we can use
+\begin{lstlisting}
+x = matrix (c( x1, n1-x1, x2, n2-x2), nrow = 2, byrow = TRUE)
+
+prop.test(x)
+\end{lstlisting}
+
+\section[Fisher's exact test]{Binomial proportions (small sample size
+  - Fisher's exact test)}
+\label{sec:binom-prop-small}
+
+The data are assumed independent. If the data from the two samples are
+correlated, we need to use McNemar's test (Sect.~\ref{sec:mcnemars-test})
+
+
+\begin{lstlisting}
+fisher.test(x, y = NULL, workspace = 200000,
+     hybrid = FALSE, control = list(), or = 1,
+     alternative = "two.sided", conf.int = TRUE,
+     conf.level = 0.95)
+\end{lstlisting}
+with $x$ is a 2-by=2 contingency table
+(Sect.~\ref{sec:contingency-table}). Just ignore $y$ when $x$ is a
+2-by-2 matrix. 
+
+\section[Mcnemars's test]{Binomial proportions (correlated samples -
+  McNemar's test}
+\label{sec:mcnemars-test}
+
+In a follow-up study, we measure data from the same group at
+different time (base-line and follow-up). So there should be some
+correlated in the data. In such case, we can't use Fisher's exact test
+or proportional test. We have to use McNemar's test. 
+
+At first, we need to build a new table from the original
+contingency-table. 
+\begin{verbatim}
+
+            survival    die     sample size
+treatment
+
+   A         526         95      621
+
+   B         515        106      621
+
+ TOTAL       1041        106     
+\end{verbatim}
+NOTICE that the sample sizes are the same, however, the column sums
+are different. We define:
+\begin{enumerate}
+\item {\bf concordant pair}: matched pair in which the outcomes are
+  the same
+\item {\bf discordant pair} $n_D$: matched pair in which the outcomes are
+  different
+\item {\bf type A discordant pair} $n_A$ is the number of pair in
+  which treatment in A is ``success'' but not in B. 
+\end{enumerate}
+So, another table need to be given
+\begin{verbatim}
+                            treatment B
+   treatment A   survive        die
+
+
+      survive      510          16
+
+       die         5            90
+\end{verbatim}
+So, we build a table in the form
+\begin{verbatim}
+                       B
+   A      |  "success" |  no
+__________|____________|_______
+ success  |    x11        x12=n_A            
+          |
+          |
+   no     |    x21=n_B     x22
+\end{verbatim}
+with $n_D = n_A + n_B$.
+% or
+% \begin{verbatim}
+%                             treatment B
+%    treatment A   survive        die
+
+
+%       survive      500          26
+
+%        die         15           80
+% \end{verbatim}
+
+Then, we apply the test using the new table if $n_D \ge 20$. 
+\begin{lstlisting}
+mcnemar.test(x, y=NULL, correct=TRUE)
+\end{lstlisting}
+with $x$ is a 2-by-2 contingency table. 
+
+For the exact case, i.e. $n_D < 20$, we need to use
+\begin{lstlisting}
+mcnemar.test(x, y=NULL, correct=FALSE)
+\end{lstlisting}
+
+\section{Sample size (two binomial proportions)}
+\label{sec:sample-size-two}
+
+Sect. 10.5 (book)
+
+\section{Power (two binomial proportions)}
+\label{sec:power-two-binomial}
+
+Sect. 10.6
+
+\section[Chi-square test (RxC contingency table)]{$\chi^2$-test (RxC contingency
+table)}
+\label{sec:chi2-test-rxc}
+
+This is a more general case of 2-by-2 contingency table in
+Sect.~\ref{sec:contingency-table}. Here, we have R rows (R groups of
+study) and C columns (C types of outputs). 
+
+
+We use $\chi^2$-test
+\begin{lstlisting}
+chisq.test(x, y=NULL, correct = TRUE,
+       p = rep(1/length(x), 
+       simulate.p.value = FALSE,
+       B = 2000)
+\end{lstlisting}
+with $x$ is the R-by-C matrix. Use $p$ only if $x$ is a vector telling
+the sample sizes.
+\begin{itemize}
+\item \verb!simulate.p.value!: whether to estimate the p-value using
+  Monte Carlo simulation
+\end{itemize}
+
+
+To test for a trend in a proportional variable (in columns), we use
+\begin{lstlisting}
+prop.trend.test( x, n, score = 1:length(x))
+\end{lstlisting}
+with $x$ vector of number of ``success'' events, $n$ vectors of number
+of trials.
+
+\begin{lstlisting}
+library(stats)
+
+prop.trend.test( c(16, 23, 34, 54), c(33, 43, 64, 56))
+\end{lstlisting}
+
+\section[Chi-square goodness-of-fit test ]{$\chi^2$ goodness-of-fit test (if
+data follow normal distribution)}
+\label{sec:chi2-goodness-fit}
+
+
+You have two groups, with a number of output categories, for each
+categories, you collected the frequencies (i.e. take the number of
+trials to ``success'', divided by the total number of trials) in each
+categories, and compare with the expected frequencies. 
+\begin{verbatim}             
+output    freq.   expected freq.
+
+
+  cat1     a1         b1
+
+  cat2     a2         b2
+
+  cat3     a3         b3
+
+  cat4     a4         b4
+\end{verbatim}
+Now, we want to test whether the data follow a normal distribution or not
+\begin{enumerate}
+\item Use \verb!hist()! to cut the data into bins
+\item Use \verb!pnorm(), pexp(),...! to calculate the expected number
+  in each bin, i.e. the vector \verb!exp!
+\item Calculate \verb!sum((exp-obs)^2/exp)!
+\item Find the tail probability of the chi-square distribution using
+  \verb!pchisq()!
+\end{enumerate}
+
+
+\section{Kappa statistics}
+\label{sec:kappa-statistics}
+
+Previous tests tell us two groups are associated or not. There are
+case that we need to use {\bf reliability test}, i.e. detect the
+degree of association.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

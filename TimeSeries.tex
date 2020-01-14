@@ -1,0 +1,126 @@
+\chapter{Time Series}
+
+
+A {\it r vector-valued time series} is a r vector-value function
+written in the form
+\begin{equation}
+\left[  \begin{array}{c}
+X_1(t) \\
+X_2(t)\\
+\ldots \\
+X_r(t)
+\end{array}\right]
+\end{equation}
+each component get real-valued, $t$ represents the time, taking on the value
+0, $\pm 1$, $\pm 2$, \ldots
+
+Time series data occurs in both physical sciences, and social sciences.
+
+\section{Multi-channel data}
+
+Reference: Mitra - Pesaran (1999)
+\begin{enumerate}
+  \item multielectrode recordings, 
+  
+  \item optical brain images using intrinsic (Blasdel and Salama, 1986; Grinvald
+  et al., 1992) or extrinsic (Davila et al., 1973) contrast agents, 
+  
+  \item functional magnetic resonance imaging (fMRI) (Ogawa et al., 1992; Kwong
+  et al., 1992), and 
+  
+  \item magnetoencephalography (MEG) (Hamalainen et al., 1993)
+\end{enumerate}
+
+Techniques for treating multivariate statistics in the field of pattern
+recognition are well developed; yet those for time series data are less well
+developed; except in special cases.
+
+\section{Multivariate time series analysis}
+\label{sec:multivariate-time-series-analysis}
+
+Time series analysis is about the study of data collected through time.
+\begin{enumerate}
+  \item  stationary time series
+
+  \item globally non-stationary (e.g. in financial time series)
+\end{enumerate}
+
+
+\section{-- Multitaper spectral method}
+\label{sec:Multitaper-spectral-method}
+
+This is the framework for performing spectral analysis of univariate and
+multivariate time series which is good for the condition of 
+\begin{itemize}
+  \item very short data segments, e.g. in fMRI (due to the cost of collecting)
+  
+  \item presence of non-stationary data
+\end{itemize}
+
+\section{General Linear Model (GLM)}
+\label{sec:GLM}
+
+The general linear model (GLM) is developed based on regression and correlation
+methods.
+\url{http://www.statsoft.com/Textbook/General-Linear-Models}
+
+The general linear model can be seen as an extension of linear multiple
+regression for a single dependent variable.
+Understanding the multiple regression model
+(Sect.\ref{sec:multiple-regression-model}) is fundamental to understanding the
+general linear model.
+
+
+\subsection{History}
+
+The emergence of the theory of algebraic invariants in the 1800's that made the
+general linear model, as we know it today, possible.
+The theory of algebraic invariants developed from the groundbreaking work of
+19th century mathematicians such as Gauss, Boole, Cayley, and Sylvester.
+{\bf it seeks to identify those quantities in systems of equations which remain
+unchanged under linear transformations of the variables in the system}.
+
+Eigenvalues, eigenvectors, determinants, matrix decomposition methods; all
+derive from the theory of algebraic invariants.
+
+Example of (invariant property):  The correlation coefficients between two
+variables is unchanged by linear transformations of either or both variables.
+
+If we did not have statistics that are invariant to the scaling of the variables
+involved, the development of useful statistical techniques would be nigh
+impossible.
+
+From the theory of algebraic invariants:
+\begin{enumerate}
+  \item  the development of the linear regression model in the late 19th
+  century,
+  
+  \item the development of correlational methods shortly thereafter
+  
+  \item Regression and correlational methods, in turn, serve as the basis for
+  the general linear model. (Sect.\ref{sec:GLM})
+
+The general linear model can be seen as an extension of linear multiple
+regression for a single dependent variable.
+\end{enumerate}
+
+
+
+
+
+
+\chapter{Regression methods}
+
+\section{Multiple regression models}
+\label{sec:multiple-regression-model}
+
+The purpose of multiple regression, the computational algorithms used to solve
+regression problems, and how the regression model is extended in the case of the
+general linear model.
+\url{http://www.statsoft.com/Textbook/Multiple-Regression}
+
+
+
+
+
+

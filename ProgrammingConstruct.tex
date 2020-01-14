@@ -1,0 +1,77 @@
+
+\chapter{Programming constructs}
+\label{chap:progr-constr}
+
+
+\section{Control statements}
+\label{sec:control-statements}
+
+FUNCTION
+\begin{lstlisting}
+function (arg_list) {
+  expr
+
+  return (value)
+}
+\end{lstlisting}
+
+
+CONDITION
+\begin{lstlisting}
+if (cond) {
+  cons.expr
+}else{
+  alt.expr
+}
+\end{lstlisting}
+
+WHILE
+\begin{lstlisting}
+repeat {
+  expr
+
+  break      # to terminate the loops
+
+  next       # skip the next statements and jump to the beginning of
+             # the loop
+
+}
+\end{lstlisting}
+
+
+FOR
+\begin{lstlisting}
+for (name in expr) {
+ exprs
+
+}        # name : the loop variable
+         # expr is often a sequence, created by using seq() function
+         # or using the form start:end structure
+
+tapply(1:n, fac, sum) # apply function 'sum' to each comb of factor
+       # levels 
+
+\end{lstlisting}
+
+Example:
+\begin{lstlisting}
+muy = 120
+sigma = 24
+
+n = 100
+x = matrix(0, nrow = n, ncol = n)
+for (i in 1:n) {
+  set.seed(i)
+  x[i,] = rnorm(100, mean = muy, sd = sigma)
+}
+\end{lstlisting}
+
+
+\section{Data types}
+\label{sec:data-types}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

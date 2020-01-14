@@ -1,0 +1,94 @@
+
+\chapter{Estimation}
+\label{chap:estimation}
+
+There are two types of estimation:
+\begin{enumerate}
+\item Point estimation (mean, standard deviation...)
+\item Interval estimation (confidence interval, range, ...)
+\end{enumerate}
+and we start with
+\begin{enumerate}
+\item {\bf Deductive}: (deductive, i.e. ask something about that
+  specific sample or population only)
+  \begin{itemize}
+  \item A single sample 
+  \item A single population
+  \end{itemize}
+\item {\bf Inductive}: (inductive, i.e. ask something about the
+  population that can be inferred from the given random sample)
+  \begin{itemize}
+  \item A single sample with given distribution 
+  \item A single sample with unknown distribution
+  \end{itemize}
+\end{enumerate}
+
+For detail, read Sect.~\ref{sec:stat-funct} for deductive,  and
+Sect.~\ref{chap:generate-data} for inductive. 
+\section{Point estimation}
+\label{sec:point-estimation}
+
+\subsection{Population mean}
+\label{sec:population-mean}
+
+
+\subsection{Population variance}
+\label{sec:population-variance}
+
+\begin{equation*}
+  \sigma^2 = \frac{\sum_{i=1}^n (x_i-\bar{x})^2}{n-1}
+\end{equation*}
+
+\begin{lstlisting}
+X = rnorm(10, size = 100)
+Y1 = sample(x, 100, rep = F)
+Y2 = sample(x, 100, rep = F)
+...
+Y10 = sample(x, 100, rep = F)
+Pop_mean = mean(var(Yi))
+\end{lstlisting}
+
+\subsection{Central Limit Theorem (CLT)}
+\label{sec:centr-limit-theor}
+
+If we take $n$ random samples $X_1,X_2,\dots, X_n$ from a population
+with known mean $\mu$ and variance $\sigma^2$, then when $n$ is large
+enough, the sample mean $\bar{X}$ follow normal distribution with mean
+is the population mean, and variance is the variance of the population
+divided by $n$; even the individuals in the population doesn't follow
+normal distribution.
+\begin{equation}
+  \label{eq:27}
+  \bar{X} =  E[X]  \sim \text{Norm}(\mu,\frac{\sigma^2}{n})
+\end{equation}
+Then, 95\% of all such samples has the sample means fall within the
+interval 
+\begin{equation}
+  \label{eq:37}
+  (\mu- z_{1-\alpha} \sigma/\sqrt{n}, \mu+z_{1-\alpha} \sigma/\sqrt{n})
+\end{equation}
+with $\alpha=1-95\%=0.05$ and $z_{0.05}=1.96$. This is known as the
+{\bf confidence interval}. The lower and upper boundary correspond to
+the 2.5-th and 97.5-th percentiles from the normal distribution. 
+
+We can easily convert $\bar{X}$ to standard normal distribution, by
+changing to a new r.v. Z
+\begin{equation}
+  \label{eq:28}
+  Z = \frac{\bar{X}-\mu}{\sigma/n}
+\end{equation}
+with $Z \sim \text{Norm}(0,1)$. However, in practice, we don't know
+population standard deviation $\sigma$. Using sample standard
+deviation, we come up with the r.v. that follow the so-called
+Student-$t$ distribution with (n-1) degree of freedom (read
+Sect.~\ref{sec:stud-t-distr}).
+\begin{equation}
+  \label{eq:29}
+  Z' = \frac{X-\mu}{s/n} \sim \text{t}_{(n-1)}
+\end{equation}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 

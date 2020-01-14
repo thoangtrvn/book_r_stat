@@ -1,0 +1,57 @@
+\chapter{Heteroscedasticity - Homo}
+\label{chap:heteroscedasticity}
+
+Even though {\it normal distribution} is the common assumption before applying
+the given test statistics, most of the methods of detecting heteroscedasticity
+outlined below can be modified for use even when the data do not come from a
+normal distribution. In many cases, this assumption can be relaxed, yielding a
+test procedure based on the same or similar test statistics but with the
+distribution under the null hypothesis evaluated by alternative routes: for
+example, by using asymptotic distributions which can be obtained from asymptotic
+theory, or by using resampling.
+
+NOTE: Truely binomially distributed data is heteroscedastic. With the true mean
+$p$ and variance $p(1-p)$, when we collect data and $p$ varying over the data,
+then the expected observation errors is a function of the number of
+observations. This causes the problem when  fitting and when attempting to
+interpret coefficient significances. A first pass fix is to apply {\it
+stabilizing transform}, e.g. sqrt(), arcsinh(), to make the observed variance
+nearly constant over a wide range of $p$.
+\footnote{\url{http://biomet.oxfordjournals.org/content/35/3-4/246.extract}}
+
+
+
+\url{http://en.wikipedia.org/wiki/Heteroscedasticity}
+
+
+\section{Park test}
+
+
+\section{Glejser test}
+
+
+\section{White test}
+
+
+\section{Breusch-Pagan test}
+
+
+\section{Goldfeld-Quandt test}
+
+\section{Cook-Weisberg test}
+
+\section{Harrison-McCabe test}
+
+\section{Brown-Forsythe test}
+
+\section{Levene test}
+
+
+\section{Groups of data}
+
+\subsection{F-test of equality of variances}
+
+\subsection{Cochran's C test}
+
+\subsection{Hartley's test}
+

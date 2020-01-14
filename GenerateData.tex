@@ -1,0 +1,666 @@
+%%
+%% GenerateData.tex
+%% Login : <hoang-trong@hoang-trong-laptop>
+%% Started on  Sun Jun 14 11:48:48 2009 Hoang-Trong Minh Tuan
+%% $Id$
+%% 
+%% Copyright (C) 2009 Hoang-Trong Minh Tuan
+%% This program is free software; you can redistribute it and/or modify
+%% it under the terms of the GNU General Public License as published by
+%% the Free Software Foundation; either version 2 of the License, or
+%% (at your option) any later version.
+%% 
+%% This program is distributed in the hope that it will be useful,
+%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%% GNU General Public License for more details.
+%% 
+%% You should have received a copy of the GNU General Public License
+%% along with this program; if not, write to the Free Software
+%% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+%%
+
+\chapter{Generate Data}
+\label{chap:generate-data}
+
+In statistics, besides reading real data from files/database... we
+also have to generate artificial data for testing/modelling
+purpose. In contrast to C language, R generates pretty good random
+numbers. 
+
+A random number is indeed a value select from a pseudo-random sequence
+of values. This circle of this sequence is long enough so that the
+values are considered random. There are many sequence of this property
+and can be determined by a seed number. Different seed numbers will
+give us different pseudo-random sequences. To set this seed number,
+use {\bf set.seed(number)} function.
+
+\textbullet Sequence of random values from a population: this is the
+same as picking out a ball from an urn of ball labeled by numbers
+\begin{lstlisting}
+sample(population, size, replace=TRUE, prob=NULL)
+
+RETURN: a vector
+with 
+  population : a vector (numeric, logical, complex, character) 
+   if it is a single numerical value, then the vector is
+   c(1:population)
+  size       : the size of the sample
+  replace    : sampling with replacement ? 
+  prob       : does all element have the same prob. to be selected?
+YES (uniform distribution, by default) or you can give a vector of the
+same size as that of population, and its items are prob. for the
+corresponding individuals in population to be selected
+\end{lstlisting}
+
+If you don't have a population, you can also generate the data which
+follow a given distribution.
+
+\section{Uniform distribution}
+\label{sec:uniform-distribution}
+The density function is the density of the probability for $X$ at the
+value $x$ if $X$ follows a uniform distribution with given parameters.
+\begin{equation}
+  \label{eq:1}
+  p_X(x) = \frac{1}{b-a} (\text{ if } a<x<b); 0 \text{ (otherwise)}
+\end{equation}
+with $min=a, max=b$.
+
+The cumulative probability distribution function is the probability
+for $X$ to fall in the range $(-\infty,x]$, i.e. get the value less
+than or equal $x$.
+
+\begin{equation}
+  \label{eq:4}
+  P(X\le x|X \approx Uni(a,b)) = prob
+\end{equation}
+
+\begin{verbatim}
+runif(n, min=0, max=1)
+\end{verbatim}
+Generate n values which is considered to be generated from the uniform
+distribution
+
+\begin{verbatim}
+dunif(x, min=0, max=1, log = FALSE)
+\end{verbatim}
+RETURN : return the density $p_X(x)$. If log=TRUE, then it return $\log(p_X(x))$.
+
+\begin{verbatim}
+punif(q, min=0, max=1, lower.tail = TRUE, log.p = FALSE)
+\end{verbatim}
+RETURN: return the probability $P(X \le q)$. If lower.tail =FALSE,
+then it returns $P(X>q)$. In either case, if log.p=TRUE, it return
+$\log(P(X\le q))$ or $\log(P(X>q))$, respectively.
+
+\begin{verbatim}
+qunif(p, min=0, max=1, lower.tail = TRUE, log.p = FALSE)
+\end{verbatim}
+RETURN: return the  $p$-th quartile (percentile) of the uniform
+distribution ($0<p<1$).
+
+NOTE: The p-th percentile of the random variable Z is $z_p$ such that
+$P(Z \le z_p) = p$. This is the reverse of {\bf punif()}. Remember to
+notice other parameters which has the same function as those in the
+previous functions.
+
+\section{Normal (Gaussian) distribution}
+\label{sec:norm-gauss-distr}
+
+A normal distribution is a continuous distribution with 2 parameters
+which are also the mean and std.
+\begin{verbatim}
+rnorm(n, mean = 0, sd = 1)
+\end{verbatim}
+RETURN: a vector of n values at which each value is considered to be a
+random variable generated from a normal distribution with mean is mean
+(default is 0) and standard deviation is sd (default is 1)
+
+\begin{verbatim}
+dnorm(x, mean = 0, sd = 1, log = FALSE)
+pnorm(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
+qnorm(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
+\end{verbatim}
+
+
+The estimation for the mean $\mu$ is covered in
+Sect.~\ref{sec:stud-t-distr} and the variance $\sigma^2$ is covered in
+Sect. \ref{sec:chi-squared-distr}. 
+
+\section{Student T-distribution}
+\label{sec:stud-t-distr}
+
+If $X_1, X_2,\dots,X_n$ are $n$ independent samples, and follow normal
+distribution $\text{Norm}(\mu,\sigma)$, then
+\begin{equation}
+  \label{eq:31}
+  Z = \frac{\bar{X}-\mu}{\sigma/n}
+\end{equation}
+follows standard normal distribution, i.e. $Z\sim \text{Norm}(0,1)$.
+In such case, 95\% of the means from repeated samples of the size $n$
+obtained from Z will fall between the 2.5-th and 97.5-th percentiles,
+i.e. from -1.96 to 1.96.  We said [-1.96, 1.96] is the 95\%
+{\bf confidence interval (CI)} of the mean of the standard normal
+distribution. What does it means? - it means that over the collection
+of all 95\% CI that can be constructed from repeated independent
+samples, 95\% of them will contain the true unknown mean $\mu$. 
+
+\begin{framed}
+  We normally look for $\ci$ confidence interval (CI), with
+  $\alpha=0.05$ typically. There is a related concept called
+  z-statistic or z-score which is used in z-test
+  (Sect.~\ref{sec:z-test}).
+
+\end{framed}
+
+However, $\sigma$ is rarely known in practice, and we need to use $s$,
+instead. The new quantity
+\begin{equation}
+  \label{eq:38}
+  Z' = t = \frac{\bar{X}-\mu}{s/n}
+\end{equation}
+is no longer follow normal distribution, i.e.  the distribution that
+$Z'$ follows is called {\bf Student-t distribution} with $(n-1)$
+degrees of freedom (df). It is a special case of the Chi-square
+distribution. % when omitting $ncp$.
+Eq.~\eqref{eq:38} is also known as t-static and is used in t-test
+(Sect.~\ref{sec:t-test}). 
+
+\begin{framed}
+  $t$ distribution is symmetric, like Normal distribution, but more
+  spread out at two ends. The two distributions will become more alike
+  as $n$ becomes large, and the difference is greatest for small
+  values of $n$ ($n < 30$). 
+\end{framed}
+
+In a normal distribution, with unknown population variance, the CI for
+the mean $\mu$ is
+\begin{equation}
+  \label{eq:26}
+  \bar{x} \pm \frac{t_{n-1,1-\alpha/2} \times s}{\sqrt{n}}
+\end{equation}
+or $\left( \bar{x} - \frac{t_{n-1,1-\alpha/2}\times s}{\sqrt{n}}, \bar{x}
+  + \frac{t_{n-1,1-\alpha/2}\times s}{\sqrt{n}}\right)$, if we use sample
+variance $s^2$. The length of the $\ci$ CI for $\mu$ is 
+\begin{equation*}
+  2\frac{t_{n-1,1-\alpha/2}\times s}{\sqrt{n}}
+\end{equation*}
+
+
+{\bf For large-sample case} ($n > 200$), then $\ci$ CI for
+the mean of a normal distribution with unknown variance is
+\begin{equation}
+  \label{eq:32}
+  \left( \bar{x} - z_{1-\alpha/2} \frac{s}{\sqrt{n}}, \bar{x}
+    +  z_{1-\alpha/2} \frac{s}{\sqrt{n}}\right)
+\end{equation}
+with $z_{.95}=1.96$. 
+
+
+For normal distribution with known variance, regardless of the sample
+size, we just use $\sigma$, rather than $s$. 
+
+\begin{verbatim}
+rt(n, df, ncp)
+\end{verbatim}
+RETURN: a vector of $n$ values from the t-distribution of $df$ degree of
+freedom.
+
+\begin{verbatim}
+dt(x, df, ncp, log = FALSE)
+p = pt(q, df, ncp, lower.tail = TRUE, log.p = FALSE)
+z = qt(p, df, ncp, lower.tail = TRUE, log.p = FALSE)
+\end{verbatim}
+with \verb!pt(t_du,...)! return $u$ and \verb!qt(u,df,...)! return
+\verb!t_du!.
+
+\begin{framed}
+  The $100\times u$-th percentile of a $t$-distribution with $d$ degrees
+  of freedom is denoted as $t_{d,u}$, that is
+  \begin{equation}
+    \label{eq:30}
+    \text{Pr}(t_d < t_{d,u}) \equiv u
+  \end{equation}
+  To convert to the same notation as $p$-th percentile, then we need
+  $p=u\times 100$.
+\end{framed}
+
+Read Sect.~\ref{sec:t-test} for t-test. 
+
+\section{Chi-squared $\chi^2$ distribution}
+\label{sec:chi-squared-distr}
+
+The sum of the square of $n$ independent r.v.(s) follows standard normal
+distribution, then we have a new distribution called
+{\bf Chi-square distribution} with $n$ degrees of freedom.
+\begin{equation}
+  \label{eq:33}
+  G = \sum^n_{i=1}X_i^2
+\end{equation}
+with $X_i \sim \text{Norm}(0,1)$.  We write $G\sim \chi^2_n$.  This
+distribution is related to the Student t-distribution
+(Sect.~\ref{sec:stud-t-distr}) as
+\begin{equation}
+  \label{eq:46}
+  \sum^n_{i=1}Z_i^2 =  \sum^n_{i=1}(X_i-\mu)^2/\sigma^2 \sim \chi^2_n
+\end{equation}
+If we approximate $\mu$ by $\bar{X}$, then we loose 1 df, or
+\begin{equation}
+  \label{eq:47}
+  \sum^n_{i=1}(X_i-\bar{X})^2/\sigma^2 \sim \chi^2_{n-1}
+\end{equation}
+then, using definition of variance, we have
+\begin{equation}
+  \label{eq:48}
+  s^2 = \sum^n_{i=1}(X_i-\bar{X})^2/(n-1) \sim \frac{\sigma^2\chi^2_{n-1}}{n-1}
+\end{equation}
+or equivalently
+\begin{equation}
+  \label{eq:49}
+  \frac{s^2(n-1)}{\sigma^2} \sim \chi^2_{n-1}
+\end{equation}
+This distribution has 1 parameter, the degree of freedom $df$.
+
+\begin{framed}
+  Student t-distribution is used to estimate the CI for the mean,
+  while Chi-square distribution is used to estimate the CI for the
+  variance. 
+
+  Student t-distribution is always symmetric around 0. However,
+  Chi-square distribution always take positive values and is thus
+  skewed to the right. 
+\end{framed}
+
+\begin{verbatim}
+rchisq(n, df, ncp=0)
+\end{verbatim}
+RETURN: a vector of n values from the Chi-square distribution of $df$
+degree of freedoms.
+
+\begin{verbatim}
+dchisq(x, df, ncp=0, log = FALSE)
+p = pchisq(q, df, ncp=0, lower.tail = TRUE, log.p = FALSE)
+z = qchisq(p, df, ncp=0, lower.tail = TRUE, log.p = FALSE)
+\end{verbatim}
+
+The $100\times u$-th percentile of a $\chi_n^2$ distribution is
+denoted as $\chi^2_{n,u}$ where
+\begin{equation}
+  \label{eq:34}
+  \text{Pr}(\chi^2_{n} < \chi^2_{n,u}) \equiv u
+\end{equation}
+
+The estimation of the variance is
+\begin{equation}
+  \label{eq:35}
+  s^2 \approx \frac{\sigma^2\chi^2_{n-1}}{n-1}
+\end{equation}
+The $100\%\times (1-\alpha)$ confidence interval (CI) for $\sigma^2$
+is
+\begin{equation}
+  \label{eq:50}
+  \left[ \frac{(n-1)s^2}{\chi^2_{n-1,1-\alpha/2}},
+    \frac{(n-1)s^2}{\chi^2_{n-1,\alpha/2}} \right]
+\end{equation}
+with the values of $\chi^2_{d.u}$ can be looked up in Table 6
+(Fundamental of BioStatistics Book). 
+
+
+\section{Dirichlet distribution}
+\label{sec:Dirichlet-distribution}
+
+
+
+
+\section{Beta distribution}
+\label{sec:beta-distribution}
+
+$\beta$ distribution is a special case of Dirichlet distribution
+(Sect.\ref{sec:Dirichlet-distribution}). It is determined by 2 positive shape
+parameters: $\alpha$ (a) and $\beta$ (b).
+\begin{equation}
+  \label{eq:2}
+  p_X(x) = \frac{\Gamma(a+b)}{\Gamma(a) \Gamma(b)} x^{a-1} (1-x)^{b-1}
+\end{equation}
+
+In many works, they uses the symbols p and q (instead of $\alpha$ and
+$\beta$) for the shape parameters of the beta distribution, reminiscent of the
+symbols traditionally used for the parameters of the Bernoulli distribution,
+because the beta distribution approaches the Bernoulli distribution in the limit
+when both shape parameters $\alpha$ and $\beta$ approach the value of zero.
+
+The plain terms, Beta distribution can be understood as {\it representing a
+probability distribution of probabilities} - that is, it represents all the
+possible values of a probability when we don't know what that probability is.
+The reason is that by changing $\alpha, \beta$, we can get any shape of
+distributions, and the underlying area is always 1 (remember that the total
+probabilities is always 1).
+
+\begin{mdframed}
+ 
+\textcolor{red}{Example}: anyone who follows baseball is familiar with {\bf batting
+averages} - simply the number of times a player gets a base hit divided by the
+number of times he goes up at bat (so it's just a percentage between 0 and 1).
+
+\begin{itemize}
+  \item  0.266 is in general considered an average batting average, while .300 is
+considered an excellent one.    
+\end{itemize}
+
+Imagine we have a baseball player, and we want to predict what his season-long
+batting average will be.
+\begin{enumerate}
+  
+  \item Can we just use his batting average so far, and update this batting average when the season moves along?
+  
+  
+The problem with this approach is that we can get a very poor measure at the
+start of a season! If a player goes up to bat once and gets a single, his
+batting average is briefly 1.000, while if he strikes out or walks, his batting
+average is 0.000. It doesn’t get much better if you go up to bat five or six
+times- you could get a lucky streak and get an average of 1.000, or an unlucky
+streak and get an average of 0, neither of which are a remotely good predictor
+of how you will bat that season.
+
+\textcolor{red}{WHY NOT A GOOD CHOICE:} The reason we don't trust the value at the beginning 
+of the season is that we have some {\bf prior knowledge}  or prior experience. 
+  
+  We know that in history, most batting averages over a season have hovered
+  between something like .215 and .360, with some extremely rare exceptions on
+  either side.
+  
+  We know that if a player gets a few strikeouts in a row at the start, that
+  might indicate he’ll end up a bit worse than average, but we know he probably
+  won’t deviate from that range.
+
+  \item  Given our batting average problem, which can be represented with a
+  binomial distribution (a series of successes and failures) -
+  Sect.\ref{sec:Binomial-distribution}, the best way to represent
+these prior expectations (what we in statistics just call a prior) is with the
+Beta distribution - it's saying, before we've seen the player take his first
+swing, what we roughly expect his batting average to be.
+  
+   
+\end{enumerate}
+
+The choice of ($\alpha, \beta$) is not easy, however, we want the mean, which is
+\begin{equation}
+E[X] = \frac{\alpha}{\alpha + \beta}
+\end{equation}
+to be within the range, and also the distribution (PDF) has to lie almost
+entirely within the range (0.2, 0.35) - the range for reasonable batting
+average. So the x-axis for the PDF (i.e. beta distribution density plot - Sect.\ref{sec:PDF})
+represents the player's batting average, which is a probablity. That's why we
+call this PDF is the probability distribution function of {\it probabilities}.
+
+Suppose the player's performance last year gives us $\alpha_0 = 81$,
+$\beta_0=219$.
+This distribution is known as the {\it prior knowledge} of the player's
+performance, which then we can use newer data to update the player's performance
+
+\begin{equation}
+\text{Beta}(\alpha_0 + \text{ hits}, \beta_0 + \text{ misses} )
+\end{equation}
+
+In other words, we don't know the mean, variance of the player's performance
+(which means we don't know the distribution of the probabilities) this year, but we have some reasonable guess, which is
+the distribution of the probabilities from last year. Then the best way to update it is using beta distribution formula.
+
+
+\url{http://varianceexplained.org/statistics/beta_distribution_and_baseball/}
+
+The domain of the Beta distribution is (0, 1), just like a probability, so we
+already know we're on the right track- but the appropriateness of the Beta for
+this task goes far beyond that. Suppose we have a \verb!prior! knowledge that on
+average, the performance should be B(alpha, beta). Then based on the
+performance, i.e.
+number of hits and misses, the guess new distribution becomes
+\begin{verbatim}
+B(alpha+hits, beta+misses)
+\end{verbatim}
+\url{https://stats.stackexchange.com/questions/47771/what-is-the-intuition-behind-beta-distribution}
+
+\end{mdframed}
+
+
+In Bayes statistic, it is considered as the {\it posterior
+  distribution} of $x$ after observing $(a-1)$ independent events with
+prob. $p$ and $(b-1)$ independent events with prob. $(1-p)$, knowing
+that the prior distribution of $p$ is uniform.
+
+
+\begin{verbatim}
+rbeta(n, shape1, shape2, ncp = 0)
+\end{verbatim}
+RETURN: a vector of $n$ values generated form the Beta distribution.
+
+\begin{verbatim}
+dbeta(x, shape1, shape2, ncp = 0, log = FALSE)
+pbeta(q, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+qbeta(p, shape1, shape2, ncp = 0, lower.tail = TRUE, log.p = FALSE)
+\end{verbatim}
+with shape1 = a, shape2 = b, $ncp$ is a non-centrality parameter.
+
+\section{Binomial distribution}
+\label{sec:binom-distr}
+\label{sec:Binomial-distribution}
+
+
+Suppose $X_i$ is the output of a Bernoulli trial, with probability of
+``success'' is $p$. If $X=\sum_1^n X_i$, then the probability that $x$
+``success'' events to occur is
+\begin{equation}
+  \label{eq:3}
+  p_X(x) = p^x
+\end{equation}
+with $x$ is the number of trials ($x$ must be non-negative integer),
+and $p$ is the prob. for the ``success'' at each independent trial.
+
+\begin{lstlisting}
+rbinom(n, size, prob, log=FALSE)
+\end{lstlisting}
+with size = x, prob = p.
+RETURN: a vector of $n$ values that are the number of ``success''
+after $size$ trials (binomial distribution).
+
+\begin{lstlisting}
+dbinom(x, size, prob, log = FALSE)
+pbinom(q, size, prob, lower.tail = TRUE, log.p = FALSE)
+qbinom(p, size, prob, lower.tail = TRUE, log.p = FALSE)
+\end{lstlisting}
+
+{\bf NOTE}:
+\begin{itemize}
+\item mean = $np$
+\item variance = $npq$
+\item std-deviation = $\sqrt{np(1-p)}$, or VAR(X) = npq.
+\end{itemize}
+
+$\hat{p}$ is the proportion (i.e. prevalence) of the events. So, if X
+is a binomial r.v. with parameters $n$ and $p$, an unbiased estimator
+of $p$ is given by $\hat{p}$, with
+\begin{itemize}
+\item $E(\hat{p}) = \mu = p$
+\item VAR$(\hat{p})=\sigma^2/n = pq/n$
+\item standard error: $se(\hat{p})=\sigma^2/n = \sqrt{pq/n} \approx  \sqrt{\hat{p}\hat{q}/n}$
+\end{itemize}
+
+{\bf Example}: To estimate the prevalence $p$ of malignant melanoma in
+women in the US, a random sample of $n=5000$ women is selected and 28
+are found to have the disease. If $X_i$ is the disease status of the
+$i$-th woman, then $X_i$ is a r.v. follow the Bernoulli trial. 
+\begin{itemize}
+\item The prevalence $p$ can be estimated by the unbiased estimator
+  $\hat{p} = 28/5000$
+\item NOTE: $\hat{q} = 1-\hat{p}$
+\end{itemize}
+
+The number of ``success'' events in $n$ Bernoulli trials is
+$X=n\hat{p}$. \textcolor{red}{If $n\hat{p}\hat{q} \ge 5$}, then the
+$100\%\times(1-\alpha)$ confidence interval (CI) for $p$ can be
+estimated as
+\begin{equation}
+  \label{eq:51}
+  \left( \hat{p} - z_{1-\alpha/2}\sqrt{\hat{p}\hat{q}/n}, \hat{p} +
+    z_{1-\alpha/2}\sqrt{\hat{p}\hat{q}/n} \right)
+\end{equation}
+This is known as the {\bf normal-theory method} for obtaining the CI
+for the Binomial parameter $p$. Otherwise, we can use the
+{\bf exact method} which doesn't require the above condition. The $100\%\times(1-\alpha)$ CI is
+$(p_1,p_2)$ with
+\begin{equation}
+  \label{eq:52}
+  \begin{split}
+    \pr(X\ge x|p=p_1) = \alpha/2 = \sum^n_{k=x}\left(
+      \begin{array}{c}
+        n \\k
+      \end{array}
+\right) p_1^k (1-p_1)^{n-k} \\
+\pr(X\le x|p=p_2) = \alpha/2 = \sum^n_{k=x}\left(
+  \begin{array}{c}
+    n \\k
+  \end{array}
+\right) p_2^k (1-p_2)^{n-k} \\
+  \end{split}
+\end{equation}
+However, it's harder to use find the sum. To help this process, you
+can use Table 7 in Fundamental BioStatistics Book. 
+
+For one-sided confidence interval, read
+Chap.~\ref{chap:conf-interv-ci}. 
+
+\section{Poisson distribution}
+\label{sec:poisson-distribution}
+
+This {\bf Poisson distribution} with parameter $\mu=\lambda T$ tells
+the distribution of the number of event $x$ to occur in a period of
+time $T$ person-years if we know the average rate of independently
+occurrence of this type of event $\lambda$ per a person-year.
+
+Unbiased parameter estimator for $\lambda$ is $\hat{\lambda} =
+x/T$, as the mean
+\begin{equation}
+  \label{eq:53}
+  E(\hat{\lambda}) = \lambda
+\end{equation}
+To obtain the $\ci$ CI for the parameter $\mu$, we use the similar
+{\bf exact method} used in Sect.~\ref{sec:binom-distr}.
+\begin{equation}
+  \label{eq:54}
+  \begin{split}
+    \pr(X\ge x|\mu=\mu_1) = \alpha/2 &= \sum^\infty_{k=x} 
+    e^{-\mu_1} \mu_1^{k}/k! \\
+    &= 1 -  \sum^{x-1}_{k=0} 
+    e^{-\mu_1} \mu_1^{k}/k! \\
+    \pr(X\le x|\mu=\mu_2) = \alpha/2 = \sum^{x}_{k=0}
+    e^{-\mu_2} \mu_2^{k}/k!
+  \end{split}
+\end{equation}
+Again, this is not easy to calculate by hand, we can use Table 8 from
+Fundamental BioStatistics Book. 
+
+
+\begin{verbatim}
+rpois(n, lambda)
+\end{verbatim}
+RETURN: a vector of n values from the Poisson distribution with rate
+parameter lambda.
+
+
+\begin{verbatim}
+dpois(x, lambda, log = FALSE)
+ppois(q, lambda, lower.tail = TRUE, log.p = FALSE)
+qpois(p, lambda, lower.tail = TRUE, log.p = FALSE)
+\end{verbatim}
+
+The Poisson distribution can be approximated by a normal distribution
+with mean = $\lambda T$, variance = $\lambda T$.
+
+\section{F-distribution}
+\label{sec:f-distribution}
+
+The F-distribution is the distribution of the ratio between the two
+variances ($s_1^2/s_2^2$) from two independent random samples whose underlying
+distributions are normal.
+
+This distribution has 2 parameters: numerator $df1$ and denominator
+$df2$ degrees of freedom (df).
+
+\begin{verbatim}
+rf(n, df1, df2, ncp)
+\end{verbatim}
+RETURN: a vector of n random variable of the F-distribution:
+\begin{verbatim}
+df(x, df1, df2, ncp, log = FALSE)
+p =pf(q, df1, df2, ncp, lower.tail = TRUE, log.p = FALSE)
+z = qf(p, df1, df2, ncp, lower.tail = TRUE, log.p = FALSE)
+\end{verbatim}
+
+The $100\times p$-th percentile of an F distribution with $d_1,d_2$ df
+is denoted by $F_{d1,d2,p}$.
+\begin{equation}
+  \label{eq:87}
+  \pr(F_{d1,d2} \le F_{d1,d2,p}) = p
+\end{equation}
+It can be looked up from Table 9 (Fundamental of BioStatistics Book). 
+
+The F-distribution is generally positive skewed, with the skewness
+dependent on the relative magnitudes of the two df. 
+\begin{itemize}
+\item If the numerator df $d1$ is 1 or 2, the mode is at 0
+\item Otherwise, the mode is at some point greater than 0
+\end{itemize}
+
+Read Sect.~\ref{sec:F-test_variance}.
+
+\section{Exponential distribution}
+\label{sec:expon-distr}
+
+\begin{verbatim}
+rexp(n, rate = 1)
+\end{verbatim}
+RETURN: a vector of n values whose are considered to be random
+variables generated from the exponential distribution
+
+\begin{verbatim}
+dexp(x, rate = 1, log = FALSE)
+pexp(q, rate = 1, lower.tail = TRUE, log.p = FALSE)
+qexp(p, rate = 1, lower.tail = TRUE, log.p = FALSE)
+\end{verbatim}
+
+
+
+
+\section{Cauchy distribution}
+\label{sec:cauchy-distribution}
+
+
+\section{Gamma distribution}
+\label{sec:gamma-distribution}
+
+\section{Geometric distribution}
+\label{sec:geom-distr}
+
+\section{Hyper-geometric distribution}
+\label{sec:hyper-geom-distr}
+
+\section{Log-normal distribution}
+\label{sec:log-norm-distr}
+
+\section{Logistic distribution}
+\label{sec:logist-distr}
+
+\section{Negative binomial distribution}
+\label{sec:negat-binom-distr}
+
+\section{Weilbull distribution}
+\label{sec:weilb-distr}
+
+\section{Wilcoxon distribution}
+\label{sec:wilc-}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "R_language"
+%%% End: 
